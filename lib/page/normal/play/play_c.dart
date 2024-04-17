@@ -57,7 +57,9 @@ class PlayC extends BaseC implements AdmobListener{
     }
     var result = _checkChooseCharResult(charBean);
     if(null==result){
-      UserInfoUtils.instance.updateHeartNum(-1);
+      if(_checkChooseLastChar()){
+        UserInfoUtils.instance.updateHeartNum(-1);
+      }
       charBean.chooseStatus=ChooseStatus.error;
       Future.delayed(const Duration(milliseconds: 1000),(){
         charBean.chooseStatus=ChooseStatus.normal;
@@ -92,6 +94,18 @@ class PlayC extends BaseC implements AdmobListener{
       }
     }
     return true;
+  }
+
+  bool _checkChooseLastChar(){
+    for (var value in wordsList) {
+      if(!value.isRight){
+        var indexWhere = value.charList.indexWhere((element) => element.chooseStatus!=ChooseStatus.right);
+        if(indexWhere==rowsNum-1){
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   WordsBean? _checkChooseCharResult(WordsCharBean charBean){
@@ -156,7 +170,7 @@ class PlayC extends BaseC implements AdmobListener{
         RoutersUtils.showDialog(
             child: TimeOutD(
               click: (){
-
+                checkShowFinger();
               },
             )
         );
@@ -197,6 +211,7 @@ class PlayC extends BaseC implements AdmobListener{
           fingerLeft=offset.dx;
           showFinger=true;
           update(["finger"]);
+          UserInfoUtils.instance.updateTipsNum(-1);
         }
       }
     }
@@ -207,7 +222,7 @@ class PlayC extends BaseC implements AdmobListener{
     for (var value in wordsList) {
       if(!value.isRight){
         var indexWhere = value.charList.indexWhere((element) => element.chooseStatus!=ChooseStatus.right);
-        if(indexWhere>0){
+        if(indexWhere>=0){
           wordsBean=value;
           break;
         }

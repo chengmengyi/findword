@@ -20,7 +20,7 @@ class AdmobUtils{
       return;
     }
     InterstitialAd.load(
-        adUnitId: "ca-app-pub-3940256099942544/4411468910",
+        adUnitId: "ca-app-pub-5059100032730518/6415795496",
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (ad) {

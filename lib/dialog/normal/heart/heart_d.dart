@@ -33,8 +33,8 @@ class HeartD extends BaseD<HeartC>{
               Stack(
                 alignment: Alignment.bottomRight,
                 children: [
-                  ImagesWidget(name: "time1",width: 120.w,height: 120.h,),
-                  TextWidget(text: "x${UserInfoUtils.instance.userTipsNum}", size: 20.sp, color: Colors.white,fontWeight: FontWeight.w700,)
+                  ImagesWidget(name: "heart1",width: 120.w,height: 120.h,),
+                  TextWidget(text: "x${UserInfoUtils.instance.userHeartNum}", size: 20.sp, color: Colors.white,fontWeight: FontWeight.w700,)
                 ],
               ),
               SizedBox(height: 8.h,),

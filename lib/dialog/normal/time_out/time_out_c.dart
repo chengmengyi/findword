@@ -9,7 +9,6 @@ class TimeOutC extends BaseC{
     if(UserInfoUtils.instance.userTipsNum<=0){
       "today‘s hint chance has been used up".showToast();
     }else{
-      UserInfoUtils.instance.updateTipsNum(-1);
       click.call();
     }
   }
