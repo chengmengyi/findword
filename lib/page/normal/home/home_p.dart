@@ -17,6 +17,7 @@ class HomeP extends BaseP<HomeC>{
     name: "launch1",
     width: double.infinity,
     height: double.infinity,
+    fit: BoxFit.fill,
   );
 
   @override
@@ -42,7 +43,10 @@ class HomeP extends BaseP<HomeC>{
         child: Stack(
           alignment: Alignment.center,
           children: [
-            ImagesWidget(name: "home6",width: 398.w,height: 316.h,),
+            Container(
+              margin: EdgeInsets.only(left: 16.w,right: 16.w),
+              child: ImagesWidget(name: "home6",width:double.infinity,height: 316.h,fit: BoxFit.fill,),
+            ),
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -70,13 +74,13 @@ class HomeP extends BaseP<HomeC>{
       con.toPlay(wordsEnum);
     },
     child: Container(
-      width: 366.w,
+      width: double.infinity,
       height: 68.h,
-      margin: EdgeInsets.only(top: 16.h),
+      margin: EdgeInsets.only(top: 16.h,left: 32.w,right: 32.w),
       child: Stack(
         alignment: Alignment.centerLeft,
         children: [
-          ImagesWidget(name: "home7",width: 366.w,height: 68.h,),
+          ImagesWidget(name: "home7",width: double.infinity,height: 68.h,fit: BoxFit.fill,),
           Row(
             children: [
               SizedBox(width: 8.w,),
