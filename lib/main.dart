@@ -1,5 +1,6 @@
 import 'package:findword/page/normal/launch/launch_p.dart';
-import 'package:findword/utils/cloak_utils.dart';
+import 'package:findword/utils/check_user_utils.dart';
+import 'package:findword/utils/routers/routers_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +33,7 @@ void main() async{
 _initApp()async{
   await GetStorage.init();
   MobileAds.instance.initialize();
-  CloakUtils.instance.requestCloak();
+  CheckUserUtils.instance.check();
 }
 
 class MyApp extends StatelessWidget {
@@ -47,12 +48,11 @@ class MyApp extends StatelessWidget {
             title: 'FindWord',
             debugShowCheckedModeBanner: false,
             enableLog: true,
-            initialRoute: '/',
+            initialRoute: RoutersName.launch,
             getPages: RoutersUtils.routersList,
             defaultTransition: Transition.rightToLeft,
             themeMode: ThemeMode.system,
             darkTheme: ThemeData.dark(),
-            home: LaunchP(),
           ),
     );
   }

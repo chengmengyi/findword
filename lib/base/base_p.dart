@@ -9,30 +9,25 @@ abstract class BaseP<T extends BaseC> extends StatelessWidget{
   Widget build(BuildContext context){
     con=Get.put(initC());
     return Scaffold(
-      body: WillPopScope(
-          child: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: customWidget()?
-            contentWidget()
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: customWidget()?
+        contentWidget()
             :Stack(
-              children: [
-                bgWidget(),
-                SafeArea(
-                  top: true,
-                  bottom: true,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: contentWidget(),
-                  ),
-                ),
-              ],
+          children: [
+            bgWidget(),
+            SafeArea(
+              top: true,
+              bottom: true,
+              child: SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: contentWidget(),
+              ),
             ),
-          ),
-          onWillPop: ()async{
-            return false;
-          }
+          ],
+        ),
       ),
     );
   }

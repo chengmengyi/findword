@@ -11,7 +11,9 @@ abstract class BaseD<T extends BaseC> extends StatelessWidget{
     return WillPopScope(
         child: Material(
           type: MaterialType.transparency,
-          child: Center(
+          child: custom()?
+          contentWidget():
+          Center(
             child: contentWidget(),
           ),
         ),
@@ -24,4 +26,6 @@ abstract class BaseD<T extends BaseC> extends StatelessWidget{
   Widget contentWidget();
 
   T initC();
+
+  bool custom()=>false;
 }

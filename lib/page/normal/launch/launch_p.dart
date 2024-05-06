@@ -20,14 +20,19 @@ class LaunchP extends BaseP<LaunchC>{
   );
 
   @override
-  Widget contentWidget() => Column(
-    children: [
-      SizedBox(height: 124.h,),
-      ImagesWidget(name: "launch2",width: 284.w,height: 112.h,),
-      const Spacer(),
-      _progressWidget(),
-      SizedBox(height: 124.h,),
-    ],
+  Widget contentWidget() => WillPopScope(
+      child: Column(
+        children: [
+          SizedBox(height: 124.h,),
+          ImagesWidget(name: "launch2",width: 284.w,height: 112.h,),
+          const Spacer(),
+          _progressWidget(),
+          SizedBox(height: 124.h,),
+        ],
+      ),
+      onWillPop: ()async{
+        return false;
+      }
   );
 
   _progressWidget()=>Container(

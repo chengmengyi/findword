@@ -13,12 +13,13 @@ class UserInfoUtils{
     return _instance!;
   }
 
-  var userCoinNum=0,userHeartNum=10,userTipsNum=3;
+  var userCoinNum=0,userHeartNum=10,userTipsNum=3,userLevel=1;
 
   UserInfoUtils._internal(){
     userCoinNum=StorageUtils.instance.getValue<int>(StorageKey.userCoinNum)??0;
     userHeartNum=getTodayNum(key: StorageKey.userHeartNum,defaultNum: 10);
     userTipsNum=getTodayNum(key: StorageKey.userTipsNum,defaultNum: 3);
+    userLevel=StorageUtils.instance.getValue<int>(StorageKey.userLevel)??1;
   }
 
   updateUserCoinNum(int addNum){
@@ -35,5 +36,10 @@ class UserInfoUtils{
     userHeartNum+=addNum;
     StorageUtils.instance.writeValue(StorageKey.userHeartNum, "${getTodayTimer()}_$userHeartNum");
     EventBean(eventName: EventName.updateUserHeartNum).sendEvent();
+  }
+  updateUserLevel(){
+    userLevel++;
+    StorageUtils.instance.writeValue(StorageKey.userLevel, userLevel);
+    EventBean(eventName: EventName.updateUserLevel).sendEvent();
   }
 }

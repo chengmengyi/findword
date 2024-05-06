@@ -41,6 +41,7 @@ dependencies:
   dio: 5.3.3
   lottie: 2.6.0
   google_mobile_ads: 4.0.0
+  flutter_check_adjust_cloak: 0.1.6
 
 
   # The following adds the Cupertino Icons font to your application.

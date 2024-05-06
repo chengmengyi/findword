@@ -38,7 +38,7 @@ class HeartD extends BaseD<HeartC>{
                 ],
               ),
               SizedBox(height: 8.h,),
-              TextWidget(text: "No chance left to play，come back tomorrow", size: 17.sp, color: Colors.white,fontWeight: FontWeight.w700,),
+              TextWidget(text: "No chance left to buy_play，come back tomorrow", size: 17.sp, color: Colors.white,fontWeight: FontWeight.w700,),
               SizedBox(height: 32.h,),
               InkWell(
                 onTap: (){

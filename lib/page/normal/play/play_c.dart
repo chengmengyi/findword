@@ -142,15 +142,15 @@ class PlayC extends BaseC implements AdmobListener{
       List<WordsCharBean> charList=[];
       for (var value in word.split("")) {
         if(value.isNotEmpty){
-          charList.add(WordsCharBean(chars: value));
-          wordsChooseList.add(WordsCharBean(chars: value,globalKey: GlobalKey()));
+          charList.add(WordsCharBean(chars: value.toUpperCase()));
+          wordsChooseList.add(WordsCharBean(chars: value.toUpperCase(),globalKey: GlobalKey()));
         }
       }
       wordsList.add(WordsBean(charList: charList));
     }
 
     for (var value1 in getRandomChar(wordsEnum)) {
-      wordsChooseList.add(WordsCharBean(chars: value1));
+      wordsChooseList.add(WordsCharBean(chars: value1.toUpperCase()));
     }
 
     wordsChooseList.shuffle();

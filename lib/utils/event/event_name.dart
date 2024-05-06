@@ -1,5 +1,6 @@
 enum EventName{
   updateUserCoin,
   updateTipsNum,
-  updateUserHeartNum
+  updateUserHeartNum,
+  updateUserLevel,
 }

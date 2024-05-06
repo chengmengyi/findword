@@ -122,7 +122,11 @@ class PlayP extends BaseP<PlayC>{
     child: Stack(
       alignment: Alignment.center,
       children: [
-        ImagesWidget(name: "play2",width: 398.w,height: 64.h,),
+        ImagesWidget(
+          name: wordsBean.isRight?"play6":"play2",
+          width: 398.w,
+          height: 64.h,
+        ),
         RichText(
           text: TextSpan(
             children: _getWordsCharItemWidget(wordsBean.charList)

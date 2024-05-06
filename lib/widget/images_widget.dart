@@ -5,12 +5,14 @@ class ImagesWidget extends StatelessWidget{
   double? width;
   double? height;
   BoxFit? fit;
+  Color? color;
 
   ImagesWidget({
     required this.name,
     this.width,
     this.height,
     this.fit,
+    this.color,
 });
 
   @override
@@ -18,6 +20,7 @@ class ImagesWidget extends StatelessWidget{
     "images/$name.png",
     width: width,
     height: height,
-    fit: fit
+    fit: fit,
+    color: color,
   );
 }

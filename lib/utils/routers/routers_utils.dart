@@ -1,3 +1,4 @@
+import 'package:findword/page/buy/buy_home/buy_home_p.dart';
 import 'package:findword/page/normal/home/home_p.dart';
 import 'package:findword/page/normal/launch/launch_p.dart';
 import 'package:findword/page/normal/play/play_p.dart';
@@ -32,6 +33,11 @@ class RoutersUtils{
     GetPage(
         name: RoutersName.web,
         page: ()=> WebP(),
+        transition: Transition.fadeIn
+    ),
+    GetPage(
+        name: RoutersName.buyHome,
+        page: ()=> BuyHomeP(),
         transition: Transition.fadeIn
     ),
   ];

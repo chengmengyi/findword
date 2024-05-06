@@ -18,7 +18,8 @@ class WordsUtils {
   final List<String> _easyWordsList=[];
   final List<String> _middleWordsList=[];
   final List<String> _highWordsList=[];
-  var _easyIndex=0,_middleIndex=0,_highIndex=0;
+  final List<String> _buyUserWordsList=[];
+  var _easyIndex=0,_middleIndex=0,_highIndex=0,_buyUserWordsIndex=0;
 
   WordsUtils._internal(){
     _initList();
@@ -42,6 +43,16 @@ class WordsUtils {
     return list;
   }
 
+  List<String> getBuyUserWordsList(){
+    List<String> list=[];
+    if(_buyUserWordsIndex>_buyUserWordsList.length-3){
+      _buyUserWordsIndex=0;
+    }
+    list.addAll(_buyUserWordsList.sublist(_buyUserWordsIndex,_buyUserWordsIndex+3));
+    _buyUserWordsIndex+=3;
+    return list;
+  }
+
   _initList(){
     var decode = jsonDecode(words64.base64());
     _easyWordsList.clear();
@@ -60,22 +71,17 @@ class WordsUtils {
         }
       }
     }
-    // [Cat, Dog, Car,
-    // Bus, Pen, Cup,
-    // Hat, Sun, Run,
-    // Fly, Toy, Key,
-    // Egg, Leg, Arm,
-    // Bed, Box, Day,
-    // Gum, Joy, Oak,
-    // Pan, Pet, Pie,
-    // Run, Sad, Sea,
-    // Sky, Sun, Bug,
-    // Bat, Bee, Cow,
-    // Dry, Fox, Ice,
-    // Tap, Tea, Wet,
-    // Zap, Arm, Zip,
-    // Sun, Air, Log,
-    // Map, Boy]
+    _initBuyUserWordsList(_easyWordsList);
+    _initBuyUserWordsList(_middleWordsList);
+    _initBuyUserWordsList(_highWordsList);
+  }
+
+  _initBuyUserWordsList(List<String> list){
+    if(list.length%3!=0){
+      _buyUserWordsList.addAll(list.sublist(0,(list.length~/3)*3));
+    }else{
+      _buyUserWordsList.addAll(list);
+    }
   }
 
   _getWordsByIndex(List<String> list,List<String> wordList,int index,WordsEnum wordsEnum){
@@ -89,12 +95,10 @@ class WordsUtils {
       if(wordsEnum==WordsEnum.high){
         _highIndex=index;
       }
-      // _updateWordsIndex(wordsEnum, index);
       return;
     }
     if(index>=wordList.length){
       index=0;
-      // _updateWordsIndex(wordsEnum, index);
     }
     list.add(wordList[index]);
     _getWordsByIndex(list,wordList,index+1,wordsEnum);
@@ -112,9 +116,14 @@ class WordsUtils {
     }
   }
 
+  updateBuyWordsIndex(){
+    StorageUtils.instance.writeValue(StorageKey.buyUserWordsIndex, _buyUserWordsIndex);
+  }
+
   initIndex(){
     _easyIndex=StorageUtils.instance.getValue<int>(StorageKey.easyIndex)??0;
     _middleIndex=StorageUtils.instance.getValue<int>(StorageKey.middleIndex)??0;
     _highIndex=StorageUtils.instance.getValue<int>(StorageKey.highIndex)??0;
+    _buyUserWordsIndex=StorageUtils.instance.getValue<int>(StorageKey.buyUserWordsIndex)??0;
   }
 }

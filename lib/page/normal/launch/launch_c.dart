@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:findword/base/base_c.dart';
 import 'package:findword/utils/routers/routers_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:flutter_check_adjust_cloak/flutter_check_adjust_cloak.dart';
 
 class LaunchC extends BaseC{
-  var progress=0.0,_count=0,_totalCount=60;
+  var progress=0.0,_count=0,_totalCount=200 ;
   late Timer _timer;
 
   @override
@@ -21,8 +22,13 @@ class LaunchC extends BaseC{
       update(["progress"]);
       if(_count>=_totalCount){
         timer.cancel();
-        RoutersUtils.offAllNamed(name: RoutersName.home);
+        _timeEnd();
       }
     });
+  }
+
+  _timeEnd(){
+    var type = FlutterCheckAdjustCloak.instance.checkType();
+    RoutersUtils.offAllNamed(name: type?RoutersName.buyHome:RoutersName.home,);
   }
 }
