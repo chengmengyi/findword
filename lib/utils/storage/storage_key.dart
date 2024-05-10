@@ -7,4 +7,12 @@ class StorageKey{
   static const String userTipsNum="userTipsNum";
   static const String buyUserWordsIndex="buyUserWordsIndex";
   static const String userLevel="userLevel";
+  static const String adStr="adStr";
+  static const String valueStr="valueStr";
+  static const String payType="payType";
+  static const String newUserGuide="newUserGuide";
+  static const String sign="sign";
+  static const String newUserGuideTimeStr="newUserGuideTimeStr";
+  static const String oldUserGuide="oldUserGuide";
+  static const String bubbleNum="bubbleNum";
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:findword/enums/pay_type.dart';
 import 'package:findword/utils/data.dart';
 import 'package:findword/utils/storage/storage_utils.dart';
 import 'package:findword/utils/words/words_enum.dart';
@@ -33,6 +34,12 @@ extension String2Int on String{
   }
 }
 
+extension RandomIntList on List<int> {
+  int random() {
+    return this[Random().nextInt(length)];
+  }
+}
+
 String getTodayTimer(){
   var time = DateTime.now();
   return "${time.month}/${time.day}/${time.year}";
@@ -48,6 +55,16 @@ int getTodayNum({required String key,int defaultNum=0}){
     return defaultNum;
   }catch(e){
     return defaultNum;
+  }
+}
+
+extension String2Double on String {
+  double toDouble() {
+    try{
+      return double.parse(this);
+    }catch(e){
+      return 0.0;
+    }
   }
 }
 
@@ -85,4 +102,28 @@ extension StringShowToast on String{
       fontSize: 16
     );
   }
+}
+
+hideKeyboard(BuildContext context){
+  FocusScopeNode currentFocus = FocusScope.of(context);
+  if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+}
+
+String zeroFill(int i) {
+  return i >= 10 ? "$i" : "0$i";
+}
+
+String second2HMS(int sec, {bool isEasy = true}) {
+  String hms = "00:00:00";
+  if (!isEasy) hms = "00:00:00";
+  if (sec > 0) {
+    int h = sec ~/ 3600;
+    int m = (sec % 3600) ~/ 60;
+    int s = sec % 60;
+    hms = "${zeroFill(h)}:${zeroFill(m)}:${zeroFill(s)}";
+    if (!isEasy) hms = "${zeroFill(h)}:${zeroFill(m)}:${zeroFill(s)}";
+  }
+  return hms;
 }

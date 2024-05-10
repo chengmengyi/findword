@@ -24,6 +24,9 @@ class BuyHomeP extends BaseP<BuyHomeC>{
   bool customWidget() => true;
 
   @override
+  bool resizeToAvoidBottomInset() => false;
+
+  @override
   Widget contentWidget() => Stack(
     children: [
       bgWidget(),

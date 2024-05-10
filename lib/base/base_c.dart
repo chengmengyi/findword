@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:findword/utils/event/event_bean.dart';
 import 'package:findword/utils/event/event_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 abstract class BaseC extends GetxController{
+  BuildContext? context;
   late StreamSubscription<EventBean>? _bus;
 
   @override

@@ -3,6 +3,7 @@ import 'package:findword/bean/words_char_bean.dart';
 import 'package:findword/page/buy/word_child/word_child_c.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/widget/FloatingWidget.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/stroked_text_widget.dart';
 import 'package:findword/widget/text_widget.dart';
@@ -42,31 +43,64 @@ class WordChildP extends BaseW<WordChildC>{
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(height: 36.h,),
-        Row(
-          children: [
-            SizedBox(width: 28.w,),
-            Container(
-              margin: EdgeInsets.only(top: 16.h),
-              child: ImagesWidget(
-                name: "bubble",
-                width: 64.w,
-                height: 64.h,
+        GetBuilder<WordChildC>(
+          id: "bubble",
+          builder: (_)=>Row(
+            children: [
+              SizedBox(width: 28.w,),
+              Visibility(
+                visible: con.bubbleShowList[0],
+                child: InkWell(
+                  onTap: (){
+                    con.clickBubble(0);
+                  },
+                  child: FloatingWidget(
+                    child: ImagesWidget(
+                      name: "bubble",
+                      width: 64.w,
+                      height: 64.h,
+                    ),
+                  ),
+                ),
               ),
-            ),
-            const Spacer(),
-            ImagesWidget(
-              name: "bubble",
-              width: 64.w,
-              height: 64.h,
-            ),
-            const Spacer(),
-            ImagesWidget(
-              name: "bubble",
-              width: 64.w,
-              height: 64.h,
-            ),
-            SizedBox(width: 34.w,),
-          ],
+              const Spacer(),
+              Visibility(
+                visible: con.bubbleShowList[1],
+                child: InkWell(
+                  onTap: (){
+                    con.clickBubble(1);
+                  },
+                  child: FloatingWidget(
+                    child: ImagesWidget(
+                      name: "bubble",
+                      width: 64.w,
+                      height: 64.h,
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Visibility(
+                visible: con.bubbleShowList[2],
+                child: InkWell(
+                  onTap: (){
+                    con.clickBubble(2);
+                  },
+                  child: SizedBox(
+                    key: con.bubbleGlobal,
+                    child: FloatingWidget(
+                      child: ImagesWidget(
+                        name: "bubble",
+                        width: 64.w,
+                        height: 64.h,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 34.w,),
+            ],
+          ),
         ),
         Stack(
           alignment: Alignment.center,

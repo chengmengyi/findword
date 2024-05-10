@@ -3,6 +3,7 @@ import 'package:findword/dialog/buy/up_level/up_level_c.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value_utils.dart';
 import 'package:findword/widget/btn_widget.dart';
 import 'package:findword/widget/buy_coin/buy_coin_w.dart';
 import 'package:findword/widget/close_widget.dart';
@@ -11,14 +12,18 @@ import 'package:findword/widget/stroked_text_widget.dart';
 import 'package:findword/widget/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class UpLevelD extends BaseD<UpLevelC>{
+  Function() closeDialog;
+  UpLevelD({required this.closeDialog});
+
   @override
   UpLevelC initC() => UpLevelC();
 
-  @override
-  bool custom() => true;
+  // @override
+  // bool custom() => true;
 
   @override
   Widget contentWidget() => Stack(
@@ -30,22 +35,32 @@ class UpLevelD extends BaseD<UpLevelC>{
           fit: BoxFit.fill
       ),
       Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _topWidget(),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _levelWidget(),
-                _moneyWidget(),
-                _progressWidget(),
-                SizedBox(height: 20.h,),
-                _btnWidget(),
-              ],
-            ),
-          )
+          _levelWidget(),
+          _moneyWidget(),
+          _progressWidget(),
+          SizedBox(height: 20.h,),
+          _btnWidget(),
         ],
-      )
+      ),
+      // Column(
+      //   children: [
+      //     _topWidget(),
+      //     Expanded(
+      //       child: Column(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           _levelWidget(),
+      //           _moneyWidget(),
+      //           _progressWidget(),
+      //           SizedBox(height: 20.h,),
+      //           _btnWidget(),
+      //         ],
+      //       ),
+      //     )
+      //   ],
+      // )
     ],
   );
 
@@ -66,7 +81,7 @@ class UpLevelD extends BaseD<UpLevelC>{
         child: ImagesWidget(name: "level1",width: double.infinity,height: 48.h,fit: BoxFit.fill,),
       ),
       StrokedTextWidget(
-          text: "Level ${UserInfoUtils.instance.userLevel}",
+          text: "Level ${UserInfoUtils.instance.userLevel+1}",
           fontSize: 50.sp,
           textColor: Colors.white,
           strokeColor: "#C35E00".toColor(),
@@ -97,7 +112,7 @@ class UpLevelD extends BaseD<UpLevelC>{
           child: Container(
             margin: EdgeInsets.only(bottom: 22.w),
             child: StrokedTextWidget(
-                text: "+1,000 ≈ \$2.2",
+                text: "+${con.addNum} ≈ \$${ValueUtils.instance.getCoinToMoney(con.addNum)}",
                 fontSize: 28.sp,
                 textColor: "#D5FF65".toColor(),
                 strokeColor: "#116508".toColor(),
@@ -126,7 +141,7 @@ class UpLevelD extends BaseD<UpLevelC>{
                 borderRadius: BorderRadius.circular(12.w)
             ),
             child: Container(
-              width: 100.w,
+              width: (330.w)*con.getLevelPro(),
               height: 20.h,
               decoration: BoxDecoration(
                   color: "#FFD643".toColor(),
@@ -135,7 +150,7 @@ class UpLevelD extends BaseD<UpLevelC>{
             ),
           ),
           StrokedTextWidget(
-              text: "1/2 level",
+              text: "${UserInfoUtils.instance.userLevel%5+1}/5 level",
               fontSize: 13.sp,
               textColor: Colors.white,
               strokeColor: "#520004".toColor(),
@@ -147,12 +162,15 @@ class UpLevelD extends BaseD<UpLevelC>{
         alignment: Alignment.bottomCenter,
         children: [
           ImagesWidget(name: "sign5",width: 48.w,height: 48.w,),
-          StrokedTextWidget(
-              text: "03:20:41",
-              fontSize: 13.sp,
-              textColor: Colors.white,
-              strokeColor: "#D35900".toColor(),
-              strokeWidth: 1.w
+          GetBuilder<UpLevelC>(
+            id: "time",
+            builder: (_)=>StrokedTextWidget(
+                text: con.countDownTime,
+                fontSize: 13.sp,
+                textColor: Colors.white,
+                strokeColor: "#D35900".toColor(),
+                strokeWidth: 1.w
+            ),
           ),
         ],
       )
@@ -162,9 +180,19 @@ class UpLevelD extends BaseD<UpLevelC>{
   _btnWidget()=>Column(
     mainAxisSize: MainAxisSize.min,
     children: [
-      BtnWidget(text: "Claim Double", clickCall: (){}),
+      BtnWidget(
+          text: "Claim Double",
+          clickCall: (){
+            con.clickDouble(closeDialog);
+          }),
       SizedBox(height: 10.h,),
-      BtnWidget(text: "Levle 2", clickCall: (){},bg: "btn",),
+      BtnWidget(
+        text: "Level ${UserInfoUtils.instance.userLevel+1}",
+        clickCall: (){
+          con.clickClose(closeDialog,close: true);
+        },
+        bg: "btn",
+      ),
     ],
   );
 }

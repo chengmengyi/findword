@@ -15,12 +15,16 @@ class BtnWidget extends StatelessWidget{
   });
   
   @override
-  Widget build(BuildContext context) => Stack(
-    alignment: Alignment.center,
-    children: [
-      ImagesWidget(name: bg??"btn_bg",width: 270.w,height: 64.h,),
-      TextWidget(text: text, size: 22.sp, color: Colors.white,fontWeight: FontWeight.w700,),
-    ],
+  Widget build(BuildContext context) => InkWell(
+    onTap: (){
+      clickCall.call();
+    },
+    child: Stack(
+      alignment: Alignment.center,
+      children: [
+        ImagesWidget(name: bg??"btn_bg",width: 270.w,height: 64.h,),
+        TextWidget(text: text, size: 22.sp, color: Colors.white,fontWeight: FontWeight.w700,),
+      ],
+    ),
   );
-
 }

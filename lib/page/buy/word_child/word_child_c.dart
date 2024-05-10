@@ -1,22 +1,36 @@
 import 'package:findword/base/base_c.dart';
 import 'dart:async';
 import 'package:findword/bean/words_char_bean.dart';
+import 'package:findword/dialog/buy/incent/incent_d.dart';
+import 'package:findword/dialog/buy/up_level/up_level_d.dart';
+import 'package:findword/dialog/buy/wheel/wheel_d.dart';
 import 'package:findword/dialog/normal/heart/heart_d.dart';
-import 'package:findword/dialog/normal/time_out/time_out_d.dart';
 import 'package:findword/dialog/normal/words_right/words_right_d.dart';
+import 'package:findword/enums/show_answer_tips_from.dart';
+import 'package:findword/utils/ad_utils.dart';
 import 'package:findword/utils/event/event_bean.dart';
 import 'package:findword/utils/event/event_name.dart';
+import 'package:findword/utils/firebase_data_utils.dart';
+import 'package:findword/utils/guide/bubble_guide_overlay.dart';
+import 'package:findword/utils/guide/guide_utils.dart';
+import 'package:findword/utils/guide/new_user_guide_step.dart';
+import 'package:findword/utils/guide/old_user_guide_step.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:findword/utils/words/words_enum.dart';
 import 'package:findword/utils/words/words_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
+import 'package:flutter_max_ad/ad/ad_type.dart';
+import 'package:flutter_max_ad/ad/listener/ad_show_listener.dart';
+import 'package:flutter_max_ad/export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class WordChildC extends BaseC{
   WordsEnum wordsEnum=WordsEnum.easy;
+  ShowAnswerTipsFrom _showAnswerTipsFrom=ShowAnswerTipsFrom.other;
   int rowsNum=3,answerTimeCount=20;
   List<WordsBean> wordsList=[];
   List<WordsCharBean> wordsChooseList=[];
@@ -24,6 +38,8 @@ class WordChildC extends BaseC{
   bool showFinger=false;
   double fingerTop=0.0,fingerLeft=0.0;
   WordsCharBean? tipsWordsCharBean;
+  GlobalKey bubbleGlobal=GlobalKey();
+  List<bool> bubbleShowList=[true,true,true];
 
   @override
   void onReady() {
@@ -60,19 +76,60 @@ class WordChildC extends BaseC{
       if(indexWhere==rowsNum-1){
         result.isRight=true;
         _timerCount?.cancel();
-        RoutersUtils.showDialog(child: WordsRightD(
-          click: (){
-            _startTimerCount();
-            if(_checkWordsAllComplete()){
-              WordsUtils.instance.updateBuyWordsIndex();
-              UserInfoUtils.instance.updateUserLevel();
-              _updateWordsList();
-            }
-          },
-        ));
+        if(_showAnswerTipsFrom==ShowAnswerTipsFrom.newUserGuide){
+          GuideUtils.instance.updateNewUserGuide(NewUserGuideStep.completeNewUserStep);
+        }else if(_showAnswerTipsFrom==ShowAnswerTipsFrom.oldUserGuide){
+          GuideUtils.instance.updateOldUserGuide(OldUserGuideStep.completeOldUserGuide);
+        }
+        _showAnswerTipsFrom=ShowAnswerTipsFrom.other;
+        // RoutersUtils.showDialog(child: WordsRightD(
+        //   click: (){
+        //     _startTimerCount();
+        //     if(_checkWordsAllComplete()){
+        //       WordsUtils.instance.updateBuyWordsIndex();
+        //       UserInfoUtils.instance.updateUserLevel();
+        //       _updateWordsList();
+        //     }
+        //   },
+        // ));
+        if(_checkWordsAllComplete()){
+          if((UserInfoUtils.instance.userLevel+1)%3==0){
+            RoutersUtils.showDialog(
+              child: WheelD()
+            );
+          }else if((UserInfoUtils.instance.userLevel+1)%5==0){
+            _showNextWords();
+          }else{
+            RoutersUtils.showDialog(
+                child: UpLevelD(
+                  closeDialog: () {
+                    _showNextWords();
+                  },
+                )
+            );
+          }
+        }else{
+          RoutersUtils.showDialog(
+            child: IncentD(
+              closeDialog: (){
+                _startTimerCount();
+              },
+            ),
+          );
+        }
+      }else{
+        if(!GuideUtils.instance.getGuideStepComplete()){
+          checkShowFinger();
+        }
       }
     }
     update(["words_list","choose_list"]);
+  }
+
+  _showNextWords(){
+    WordsUtils.instance.updateBuyWordsIndex();
+    UserInfoUtils.instance.updateUserLevel();
+    _updateWordsList();
   }
 
   bool _checkWordsAllComplete(){
@@ -149,6 +206,9 @@ class WordChildC extends BaseC{
   }
 
   _startTimerCount(){
+    if(!GuideUtils.instance.getGuideStepComplete()){
+      return;
+    }
     _timerCount?.cancel();
     answerTimeCount=20;
     update(["timer"]);
@@ -157,13 +217,6 @@ class WordChildC extends BaseC{
       update(["timer"]);
       if(answerTimeCount<=0){
         timer.cancel();
-        // RoutersUtils.showDialog(
-        //     child: TimeOutD(
-        //       click: (){
-        //         checkShowFinger();
-        //       },
-        //     )
-        // );
         checkShowFinger();
       }
     });
@@ -180,8 +233,8 @@ class WordChildC extends BaseC{
   }
 
   checkShowFinger(){
-    if(UserInfoUtils.instance.userTipsNum<=0){
-      "today‘s hint chance has been used up".showToast();
+    if(UserInfoUtils.instance.userTipsNum<=0&&GuideUtils.instance.getGuideStepComplete()){
+      // "today‘s hint chance has been used up".showToast();
       return;
     }
     var tipsWords = _checkTipsWords();
@@ -235,10 +288,36 @@ class WordChildC extends BaseC{
     }
   }
 
-  @override
-  void onClose() {
-    _timerCount?.cancel();
-    super.onClose();
+  clickBubble(index){
+    bubbleShowList[index]=false;
+    update(["bubble"]);
+    AdUtils.instance.showAd(
+        adType: AdType.reward,
+        cancelShow: (){
+          _showBubble(index);
+        },
+        adShowListener: AdShowListener(
+            showAdSuccess: (MaxAd? ad) {
+
+            },
+            showAdFail: (MaxAd? ad, MaxError? error) {
+
+            },
+            onAdHidden: (MaxAd? ad) {
+              UserInfoUtils.instance.updateBubbleNum(1);
+              _showBubble(index);
+            },
+            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
+
+            })
+    );
+  }
+
+  _showBubble(index){
+    Future.delayed(Duration(seconds: FirebaseDataUtils.instance.bubbleTime),(){
+      bubbleShowList[index]=true;
+      update(["bubble"]);
+    });
   }
 
   @override
@@ -253,9 +332,60 @@ class WordChildC extends BaseC{
       case EventName.updateUserLevel:
         update(["level","progress"]);
         break;
+      case EventName.showWordBubbleGuide:
+        _showWordBubbleGuide();
+        break;
+      case EventName.showAnswerTips:
+        _showAnswerTipsFrom=ShowAnswerTipsFrom.newUserGuide;
+        checkShowFinger();
+        break;
+      case EventName.showOldUserAnswerTips:
+        _showAnswerTipsFrom=ShowAnswerTipsFrom.oldUserGuide;
+        checkShowFinger();
+        break;
       default:
 
         break;
     }
+  }
+
+  _showWordBubbleGuide(){
+    var box = bubbleGlobal.currentContext!.findRenderObject()! as RenderBox;
+    var offset = box.localToGlobal(Offset.zero);
+    if(null!=context){
+      GuideUtils.instance.showOverlay(
+          context: context!,
+          widget: BubbleGuideOverlay(
+              offset: offset,
+              click: (){
+                GuideUtils.instance.hideOverlay();
+                AdUtils.instance.showAd(
+                    adType: AdType.reward,
+                    adShowListener: AdShowListener(
+                        showAdSuccess: (MaxAd? ad) {  },
+                        showAdFail: (MaxAd? ad, MaxError? error) {
+                          _updateNewUserGuideStep();
+                        },
+                        onAdHidden: (MaxAd? ad) {
+                          _updateNewUserGuideStep();
+                        },
+                        onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {  }
+                    )
+                );
+              }
+          ),
+      );
+    }
+  }
+
+  _updateNewUserGuideStep(){
+    GuideUtils.instance.updateNewUserGuide(NewUserGuideStep.answerTips);
+  }
+
+
+  @override
+  void onClose() {
+    _timerCount?.cancel();
+    super.onClose();
   }
 }

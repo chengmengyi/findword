@@ -1,7 +1,9 @@
 import 'package:findword/base/base_d.dart';
 import 'package:findword/dialog/buy/incent/incent_c.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value_utils.dart';
 import 'package:findword/widget/btn_widget.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/light_widget.dart';
@@ -12,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IncentD extends BaseD<IncentC>{
+  Function() closeDialog;
+  IncentD({required this.closeDialog});
 
   @override
   IncentC initC() => IncentC();
@@ -65,7 +69,7 @@ class IncentD extends BaseD<IncentC>{
             children: [
               LightWidget(),
               StrokedTextWidget(
-                  text: "\$2.2",
+                  text: "\$${ValueUtils.instance.getCoinToMoney(con.addNum)}",
                   fontSize: 28.sp,
                   textColor: "#D5FF65".toColor(),
                   strokeColor: "#002E63".toColor(),
@@ -102,7 +106,7 @@ class IncentD extends BaseD<IncentC>{
                         borderRadius: BorderRadius.circular(12.w)
                     ),
                     child: Container(
-                      width: 100.w,
+                      width: (300.w)*ValueUtils.instance.getCashProgress(),
                       height: 22.h,
                       decoration: BoxDecoration(
                           color: "#FFD643".toColor(),
@@ -119,21 +123,29 @@ class IncentD extends BaseD<IncentC>{
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left: 30.w),
-            child: Stack(
-              alignment: Alignment.topCenter,
+            margin: EdgeInsets.only(left: (300.w)*ValueUtils.instance.getCashProgress()-24.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                ImagesWidget(name: "pro_bg",width: 48.w,height: 24.h,),
                 Container(
-                  margin: EdgeInsets.only(top: 1.h),
+                  padding: EdgeInsets.only(left: 8.w,right: 8.w,top: 1.h,bottom: 2.h),
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: ["#FF9900".toColor(),"#FFE665".toColor()]
+                      ),
+                      borderRadius: BorderRadius.circular(16.w)
+                  ),
                   child: TextWidget(
-                    text: "\$20",
+                    text: "\$${ValueUtils.instance.getCoinToMoney(UserInfoUtils.instance.userCoinNum)}",
                     size: 15.sp,
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     height: 1,
                   ),
-                )
+                ),
+                ImagesWidget(name: "jiantou",width: 8.w,)
               ],
             ),
           ),
@@ -150,20 +162,25 @@ class IncentD extends BaseD<IncentC>{
     ],
   );
 
-  _btnWidget()=>Stack(
-    alignment: Alignment.topRight,
-    children: [
-      Container(
-        margin: EdgeInsets.all(8.w),
-        child: BtnWidget(text: "Claim", clickCall: (){}),
-      ),
-      ImagesWidget(name: "incent1",width: 80.w,height: 32.h,),
-    ],
+  _btnWidget()=>InkWell(
+    onTap: (){
+      con.clickDouble(closeDialog);
+    },
+    child: Stack(
+      alignment: Alignment.topRight,
+      children: [
+        Container(
+          margin: EdgeInsets.all(8.w),
+          child: BtnWidget(text: "Claim", clickCall: (){}),
+        ),
+        ImagesWidget(name: "incent1",width: 80.w,height: 32.h,),
+      ],
+    ),
   );
 
   _closeTextWidget()=> InkWell(
     onTap: (){
-      RoutersUtils.off();
+      con.clickClose(closeDialog: closeDialog);
     },
     child: StrokedTextWidget(
         text: "Claim",

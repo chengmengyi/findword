@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:adjust_sdk/adjust_event_success.dart';
 import 'package:findword/utils/data.dart';
+import 'package:findword/utils/firebase_data_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_check_adjust_cloak/adjust/adjust_listener.dart';
 import 'package:flutter_check_adjust_cloak/cloak/cloak_listener.dart';
@@ -82,7 +83,7 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
 
   @override
   initFirebaseSuccess() {
-
+    FirebaseDataUtils.instance.getFirebaseData();
   }
 
   @override

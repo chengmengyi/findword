@@ -1,7 +1,11 @@
+import 'package:findword/page/buy/test.dart';
 import 'package:findword/page/normal/launch/launch_p.dart';
+import 'package:findword/utils/ad_utils.dart';
 import 'package:findword/utils/check_user_utils.dart';
 import 'package:findword/utils/routers/routers_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,7 +37,9 @@ void main() async{
 _initApp()async{
   await GetStorage.init();
   MobileAds.instance.initialize();
+  ValueUtils.instance.initValue();
   CheckUserUtils.instance.check();
+  AdUtils.instance.initAd();
 }
 
 class MyApp extends StatelessWidget {
@@ -48,11 +54,25 @@ class MyApp extends StatelessWidget {
             title: 'FindWord',
             debugShowCheckedModeBanner: false,
             enableLog: true,
-            initialRoute: RoutersName.launch,
+            // initialRoute: RoutersName.launch,
             getPages: RoutersUtils.routersList,
             defaultTransition: Transition.rightToLeft,
             themeMode: ThemeMode.system,
             darkTheme: ThemeData.dark(),
+            builder: (context, widget) {
+              return Material(
+                child: InkWell(
+                  onTap: () {
+                    hideKeyboard(context);
+                  },
+                  child: MediaQuery(
+                    data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                    child: widget!,
+                  ),
+                ),
+              );
+            },
+            home: TestPage(),
           ),
     );
   }

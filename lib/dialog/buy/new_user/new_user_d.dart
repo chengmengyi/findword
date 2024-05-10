@@ -1,7 +1,7 @@
 import 'package:findword/base/base_d.dart';
 import 'package:findword/dialog/buy/new_user/new_user_c.dart';
-import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value_utils.dart';
 import 'package:findword/widget/btn_widget.dart';
 import 'package:findword/widget/close_widget.dart';
 import 'package:findword/widget/images_widget.dart';
@@ -22,7 +22,7 @@ class NewUserD extends BaseD<NewUserC>{
     children: [
       CloseWidget(
         clickCall: (){
-          RoutersUtils.off();
+          con.clickClose();
         },
       ),
       Stack(
@@ -50,7 +50,7 @@ class NewUserD extends BaseD<NewUserC>{
                 BtnWidget(
                     text: "Claim Double",
                     clickCall: (){
-
+                      con.clickClaim();
                     }
                 )
               ],
@@ -88,7 +88,7 @@ class NewUserD extends BaseD<NewUserC>{
             children: [
               LightWidget(),
               StrokedTextWidget(
-                  text: "\$2.2",
+                  text: "\$${ValueUtils.instance.getCoinToMoney(con.addNum)}",
                   fontSize: 28.sp,
                   textColor: "#D5FF65".toColor(),
                   strokeColor: "#002E63".toColor(),

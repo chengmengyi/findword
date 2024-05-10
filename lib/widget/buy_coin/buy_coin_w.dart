@@ -1,10 +1,13 @@
 import 'package:findword/base/base_w.dart';
+import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value_utils.dart';
 import 'package:findword/widget/buy_coin/buy_coin_c.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class BuyCoinW extends BaseW<BuyCoinC>{
   @override
@@ -27,11 +30,14 @@ class BuyCoinW extends BaseW<BuyCoinC>{
       children: [
         ImagesWidget(name: "icon_money1",width: 32.w,height: 32.w,),
         SizedBox(width: 8.w,),
-        TextWidget(
-          text: "95,211 ≈ \$95",
-          size: 15.sp,
-          color: "#002E63".toColor(),
-          fontWeight: FontWeight.w700,
+        GetBuilder<BuyCoinC>(
+          id: "coin",
+          builder: (_)=>TextWidget(
+            text: "${UserInfoUtils.instance.userCoinNum} ≈ \$${ValueUtils.instance.getCoinToMoney(UserInfoUtils.instance.userCoinNum)}",
+            size: 15.sp,
+            color: "#002E63".toColor(),
+            fontWeight: FontWeight.w700,
+          ),
         ),
         SizedBox(width: 8.w,),
         Container(

@@ -3,7 +3,8 @@ import 'package:findword/utils/event/event_utils.dart';
 
 class EventBean{
   EventName eventName;
-  EventBean({required this.eventName});
+  int? intValue;
+  EventBean({required this.eventName,this.intValue});
 
   sendEvent(){
     EventUtils.getInstance()?.fire(this);

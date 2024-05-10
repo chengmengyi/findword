@@ -9,6 +9,7 @@ abstract class BaseP<T extends BaseC> extends StatelessWidget{
   Widget build(BuildContext context){
     con=Get.put(initC());
     return Scaffold(
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset(),
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
@@ -39,4 +40,5 @@ abstract class BaseP<T extends BaseC> extends StatelessWidget{
   T initC();
 
   bool customWidget()=>false;
+  bool resizeToAvoidBottomInset()=>true;
 }
