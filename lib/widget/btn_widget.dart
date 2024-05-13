@@ -22,7 +22,7 @@ class BtnWidget extends StatelessWidget{
     child: Stack(
       alignment: Alignment.center,
       children: [
-        ImagesWidget(name: bg??"btn_bg",width: 270.w,height: 64.h,),
+        ImagesWidget(name: bg??"btn_bg",width: 270.w,height: 64.h,fit: BoxFit.fill,),
         TextWidget(text: text, size: 22.sp, color: Colors.white,fontWeight: FontWeight.w700,),
       ],
     ),

@@ -44,12 +44,17 @@ class IncentC extends BaseC{
     );
   }
 
-  clickClose({int? num,Function()? closeDialog}){
+  clickClose({int? num,Function()? closeDialog,bool clickClaim=false}){
     RoutersUtils.off();
     UserInfoUtils.instance.updateUserCoinNum(num??addNum);
     if(incentFrom==IncentFrom.oldUserGuide){
       GuideUtils.instance.updateOldUserGuide(OldUserGuideStep.answerTips);
     }
     closeDialog?.call();
+    if(clickClaim){
+      if(incentFrom==IncentFrom.wheel){
+        AdUtils.instance.updateWheelCloseNum();
+      }
+    }
   }
 }

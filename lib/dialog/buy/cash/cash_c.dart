@@ -1,5 +1,6 @@
 import 'package:findword/base/base_c.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class CashC extends BaseC{
@@ -11,6 +12,7 @@ class CashC extends BaseC{
       return;
     }
     RoutersUtils.off();
+    "Congratulations on your successful withdrawal. Your money has arrived.".showToast();
   }
 
   @override

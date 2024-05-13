@@ -332,7 +332,7 @@ class WordChildP extends BaseW<WordChildC>{
       SizedBox(width: 16.w,),
       InkWell(
         onTap: (){
-          // con.checkShowFinger();
+          con.checkShowFinger();
         },
         child: Stack(
           alignment: Alignment.center,

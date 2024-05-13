@@ -1,3 +1,3 @@
 enum IncentFrom{
-  oldUserGuide,other
+  oldUserGuide,wheel,other
 }

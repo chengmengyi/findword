@@ -180,7 +180,7 @@ class IncentD extends BaseD<IncentC>{
 
   _closeTextWidget()=> InkWell(
     onTap: (){
-      con.clickClose(closeDialog: closeDialog);
+      con.clickClose(closeDialog: closeDialog,clickClaim: true);
     },
     child: StrokedTextWidget(
         text: "Claim",

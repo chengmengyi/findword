@@ -1,14 +1,15 @@
 import 'package:findword/base/base_d.dart';
 import 'package:findword/dialog/buy/wheel/wheel_c.dart';
-import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/dialog/buy/wheel/wheel_widget.dart';
+import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:findword/widget/btn_widget.dart';
-import 'package:findword/widget/buy_coin/buy_coin_w.dart';
 import 'package:findword/widget/close_widget.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class WheelD extends BaseD<WheelC>{
   @override
@@ -26,11 +27,23 @@ class WheelD extends BaseD<WheelC>{
       SizedBox(height: 16.h,),
       _wheelWidget(),
       SizedBox(height: 16.h,),
-      _boxWidget(),
+      // _boxWidget(),
       SizedBox(height: 30.h,),
-      BtnWidget(text: "Free To Play", clickCall: (){},bg: "btn",),
+      GetBuilder<WheelC>(
+        id: "wheel_chance",
+        builder: (_)=>BtnWidget(
+          text: UserInfoUtils.instance.wheelNum>0?"Free To Play":"Get More Chance",
+          clickCall: (){
+            con.startWheel();
+          },
+          bg: "btn",
+        ),
+      ),
       SizedBox(height: 10.h,),
-      TextWidget(text: "Today Remaining times : 5", size: 13.sp, color: Colors.white.withOpacity(0.7))
+      GetBuilder<WheelC>(
+        id: "wheel_chance",
+        builder: (_)=> TextWidget(text: "Today Remaining times : ${UserInfoUtils.instance.wheelNum}", size: 13.sp, color: Colors.white.withOpacity(0.7))
+      ),
     ],
   );
 
@@ -80,17 +93,22 @@ class WheelD extends BaseD<WheelC>{
   _wheelWidget()=>Stack(
     alignment: Alignment.center,
     children: [
-      ImagesWidget(name: "wheel2",height: 398.h,fit: BoxFit.fitHeight,),
-      ImagesWidget(name: "wheel3",width: 121.w),
+      WheelWidget(),
+      InkWell(
+        onTap: (){
+          con.startWheel();
+        },
+        child: ImagesWidget(name: "wheel3",width: 121.w),
+      ),
     ],
   );
 
   _topWidget()=>Row(
     children: [
-      SizedBox(width: 16.w,),
-      BuyCoinW(),
+      // SizedBox(width: 16.w,),
+      // BuyCoinW(),
       const Spacer(),
-      CloseWidget(clickCall: (){RoutersUtils.off();})
+      CloseWidget(clickCall: (){ con.clickClose(); })
     ],
   );
 }

@@ -11,4 +11,7 @@ enum EventName{
   updateBubbleNum,
   signSuccess,
   updateHomeIndex,
+  startRotationWheel,
+  stopRotationWheel,
+  updateWheelChance,
 }

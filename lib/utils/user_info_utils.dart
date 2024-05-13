@@ -15,7 +15,7 @@ class UserInfoUtils{
     return _instance!;
   }
 
-  var userCoinNum=0,userHeartNum=10,userTipsNum=3,userLevel=1,payType=PayType.paypal,bubbleNum=0;
+  var userCoinNum=0,userHeartNum=10,userTipsNum=3,userLevel=1,payType=PayType.paypal,bubbleNum=0,wheelNum=0;
 
   UserInfoUtils._internal(){
     userCoinNum=StorageUtils.instance.getValue<int>(StorageKey.userCoinNum)??0;
@@ -58,5 +58,10 @@ class UserInfoUtils{
     bubbleNum+=num;
     StorageUtils.instance.writeValue(StorageKey.bubbleNum, bubbleNum);
     EventBean(eventName: EventName.updateBubbleNum).sendEvent();
+  }
+
+  updateWheelNum(int num){
+    wheelNum+=num;
+    EventBean(eventName: EventName.updateWheelChance).sendEvent();
   }
 }

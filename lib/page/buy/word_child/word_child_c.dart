@@ -1,7 +1,9 @@
 import 'package:findword/base/base_c.dart';
 import 'dart:async';
 import 'package:findword/bean/words_char_bean.dart';
+import 'package:findword/dialog/buy/buy_heart/buy_heart_d.dart';
 import 'package:findword/dialog/buy/incent/incent_d.dart';
+import 'package:findword/dialog/buy/no_tips/no_tips_d.dart';
 import 'package:findword/dialog/buy/up_level/up_level_d.dart';
 import 'package:findword/dialog/buy/wheel/wheel_d.dart';
 import 'package:findword/dialog/normal/heart/heart_d.dart';
@@ -56,7 +58,7 @@ class WordChildC extends BaseC{
       return;
     }
     if(UserInfoUtils.instance.userHeartNum<=0){
-      RoutersUtils.showDialog(child: HeartD());
+      RoutersUtils.showDialog(child: BuyHeartD());
       return;
     }
     var result = _checkChooseCharResult(charBean);
@@ -72,8 +74,7 @@ class WordChildC extends BaseC{
     }else{
       charBean.chooseStatus=ChooseStatus.right;
       _startTimerCount();
-      var indexWhere = result.charList.indexWhere((element) => element.chars==charBean.chars);
-      if(indexWhere==rowsNum-1){
+      if(_checkCompleteWord(result.charList)){
         result.isRight=true;
         _timerCount?.cancel();
         if(_showAnswerTipsFrom==ShowAnswerTipsFrom.newUserGuide){
@@ -94,6 +95,7 @@ class WordChildC extends BaseC{
         // ));
         if(_checkWordsAllComplete()){
           if((UserInfoUtils.instance.userLevel+1)%3==0){
+            UserInfoUtils.instance.updateWheelNum(1);
             RoutersUtils.showDialog(
               child: WheelD()
             );
@@ -151,6 +153,15 @@ class WordChildC extends BaseC{
       }
     }
     return false;
+  }
+
+  bool _checkCompleteWord(List<WordsCharBean> list){
+    for (var value in list) {
+      if(value.chooseStatus!=ChooseStatus.right){
+        return false;
+      }
+    }
+    return true;
   }
 
   WordsBean? _checkChooseCharResult(WordsCharBean charBean){
@@ -234,7 +245,13 @@ class WordChildC extends BaseC{
 
   checkShowFinger(){
     if(UserInfoUtils.instance.userTipsNum<=0&&GuideUtils.instance.getGuideStepComplete()){
-      // "today‘s hint chance has been used up".showToast();
+      RoutersUtils.showDialog(
+          child: NoTipsD(
+            addTipsCall: (){
+              checkShowFinger();
+            },
+          )
+      );
       return;
     }
     var tipsWords = _checkTipsWords();

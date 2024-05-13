@@ -1,5 +1,3 @@
-import 'package:findword/page/buy/test.dart';
-import 'package:findword/page/normal/launch/launch_p.dart';
 import 'package:findword/utils/ad_utils.dart';
 import 'package:findword/utils/check_user_utils.dart';
 import 'package:findword/utils/routers/routers_name.dart';
@@ -54,7 +52,7 @@ class MyApp extends StatelessWidget {
             title: 'FindWord',
             debugShowCheckedModeBanner: false,
             enableLog: true,
-            // initialRoute: RoutersName.launch,
+            initialRoute: RoutersName.launch,
             getPages: RoutersUtils.routersList,
             defaultTransition: Transition.rightToLeft,
             themeMode: ThemeMode.system,
@@ -72,7 +70,6 @@ class MyApp extends StatelessWidget {
                 ),
               );
             },
-            home: TestPage(),
           ),
     );
   }

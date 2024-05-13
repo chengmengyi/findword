@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:findword/dialog/buy/load_ad/laod_ad_d.dart';
+import 'package:findword/dialog/buy/load_fail/load_fail_d.dart';
 import 'package:findword/utils/data.dart';
 import 'package:findword/utils/firebase_data_utils.dart';
+import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/storage/storage_key.dart';
 import 'package:findword/utils/storage/storage_utils.dart';
 import 'package:findword/utils/utils.dart';
@@ -21,7 +24,7 @@ class AdUtils{
 
   AdUtils._internal();
 
-  var upLevelCloseNum=0;
+  var upLevelCloseNum=0,wheelCloseNum=0,failNum=0;
 
   initAd(){
     var json = _getLocalAdJson();
@@ -43,15 +46,59 @@ class AdUtils{
   }
 
   showAd({required AdType adType,required AdShowListener adShowListener,Function()? cancelShow}){
-    FlutterMaxAd.instance.showAd(
+    FlutterMaxAd.instance.loadAdByType(adType);
+    RoutersUtils.showDialog(
+      child: LoadAdD(
         adType: adType,
-        adShowListener: adShowListener
+        loadFail: (){
+          RoutersUtils.showDialog(
+              child: LoadFailD(
+                tryAgain: (){
+                  failNum++;
+                  if(failNum<=3){
+                    showAd(adType: adType, adShowListener: adShowListener,cancelShow: cancelShow);
+                  }else{
+                    failNum=0;
+                  }
+                },
+              )
+          );
+        },
+        loadSuccess: (){
+          FlutterMaxAd.instance.showAd(
+              adType: adType,
+              adShowListener: adShowListener
+          );
+        },
+      ),
     );
   }
 
   updateUpLevelCloseNum(){
     upLevelCloseNum++;
     if(upLevelCloseNum%FirebaseDataUtils.instance.wordInt==0){
+      FlutterMaxAd.instance.showAd(
+          adType: AdType.inter,
+          adShowListener: AdShowListener(
+              showAdSuccess: (MaxAd? ad) {
+
+              },
+              showAdFail: (MaxAd? ad, MaxError? error) {
+
+              },
+              onAdHidden: (MaxAd? ad) {
+
+              },
+              onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
+
+              })
+      );
+    }
+  }
+
+  updateWheelCloseNum(){
+    wheelCloseNum++;
+    if(wheelCloseNum%FirebaseDataUtils.instance.closeWord==0){
       FlutterMaxAd.instance.showAd(
           adType: AdType.inter,
           adShowListener: AdShowListener(
