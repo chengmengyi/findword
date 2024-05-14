@@ -1,15 +1,22 @@
+import 'dart:io';
+
 import 'package:findword/base/base_c.dart';
 import 'dart:async';
 import 'package:findword/bean/words_char_bean.dart';
+import 'package:findword/dialog/buy/box/box_d.dart';
 import 'package:findword/dialog/buy/buy_heart/buy_heart_d.dart';
+import 'package:findword/dialog/buy/comment/comment_d.dart';
 import 'package:findword/dialog/buy/incent/incent_d.dart';
+import 'package:findword/dialog/buy/incent/incent_from.dart';
 import 'package:findword/dialog/buy/no_tips/no_tips_d.dart';
 import 'package:findword/dialog/buy/up_level/up_level_d.dart';
 import 'package:findword/dialog/buy/wheel/wheel_d.dart';
 import 'package:findword/dialog/normal/heart/heart_d.dart';
 import 'package:findword/dialog/normal/words_right/words_right_d.dart';
+import 'package:findword/enums/click_words_tips_from.dart';
 import 'package:findword/enums/show_answer_tips_from.dart';
-import 'package:findword/utils/ad_utils.dart';
+import 'package:findword/utils/max_ad/ad_pos_id.dart';
+import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/event/event_bean.dart';
 import 'package:findword/utils/event/event_name.dart';
 import 'package:findword/utils/firebase_data_utils.dart';
@@ -18,6 +25,7 @@ import 'package:findword/utils/guide/guide_utils.dart';
 import 'package:findword/utils/guide/new_user_guide_step.dart';
 import 'package:findword/utils/guide/old_user_guide_step.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:findword/utils/words/words_enum.dart';
@@ -27,6 +35,7 @@ import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
 import 'package:flutter_max_ad/ad/ad_type.dart';
 import 'package:flutter_max_ad/ad/listener/ad_show_listener.dart';
 import 'package:flutter_max_ad/export.dart';
+import 'package:flutter_max_ad/flutter_max_ad.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
@@ -42,6 +51,14 @@ class WordChildC extends BaseC{
   WordsCharBean? tipsWordsCharBean;
   GlobalKey bubbleGlobal=GlobalKey();
   List<bool> bubbleShowList=[true,true,true];
+  ClickWordsTipsFrom _clickWordsTipsFrom=ClickWordsTipsFrom.other;
+
+  @override
+  void onInit() {
+    super.onInit();
+    FlutterMaxAd.instance.loadAdByType(AdType.reward);
+    FlutterMaxAd.instance.loadAdByType(AdType.inter);
+  }
 
   @override
   void onReady() {
@@ -63,6 +80,7 @@ class WordChildC extends BaseC{
     }
     var result = _checkChooseCharResult(charBean);
     if(null==result){
+      TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.word_flase_c);
       if(_checkChooseLastChar()){
         UserInfoUtils.instance.updateHeartNum(-1);
       }
@@ -72,6 +90,7 @@ class WordChildC extends BaseC{
         update(["choose_list"]);
       });
     }else{
+      TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.word_true_c);
       charBean.chooseStatus=ChooseStatus.right;
       _startTimerCount();
       if(_checkCompleteWord(result.charList)){
@@ -83,45 +102,46 @@ class WordChildC extends BaseC{
           GuideUtils.instance.updateOldUserGuide(OldUserGuideStep.completeOldUserGuide);
         }
         _showAnswerTipsFrom=ShowAnswerTipsFrom.other;
-        // RoutersUtils.showDialog(child: WordsRightD(
-        //   click: (){
-        //     _startTimerCount();
-        //     if(_checkWordsAllComplete()){
-        //       WordsUtils.instance.updateBuyWordsIndex();
-        //       UserInfoUtils.instance.updateUserLevel();
-        //       _updateWordsList();
-        //     }
-        //   },
-        // ));
         if(_checkWordsAllComplete()){
           if((UserInfoUtils.instance.userLevel+1)%3==0){
             UserInfoUtils.instance.updateWheelNum(1);
             RoutersUtils.showDialog(
-              child: WheelD()
+              child: WheelD(
+                dismissDialog: (){
+                  _showNextWords();
+                },
+              )
             );
           }else if((UserInfoUtils.instance.userLevel+1)%5==0){
-            _showNextWords();
+            RoutersUtils.showDialog(
+                child: BoxD(
+                  dismissDialog: (){
+                    _showNextWords();
+                  },
+                )
+            );
           }else{
             RoutersUtils.showDialog(
                 child: UpLevelD(
                   closeDialog: () {
                     _showNextWords();
+                    if(Platform.isIOS&&UserInfoUtils.instance.todayShowedReviewDialogNum<2){
+                      RoutersUtils.showDialog(child: CommentD());
+                    }
                   },
                 )
             );
           }
         }else{
-          RoutersUtils.showDialog(
-            child: IncentD(
+          showIncentDialog(
+              incentFrom: IncentFrom.answerRightOneWord,
               closeDialog: (){
                 _startTimerCount();
-              },
-            ),
-          );
+              });
         }
       }else{
         if(!GuideUtils.instance.getGuideStepComplete()){
-          checkShowFinger();
+          checkShowFinger(ClickWordsTipsFrom.guide);
         }
       }
     }
@@ -228,7 +248,7 @@ class WordChildC extends BaseC{
       update(["timer"]);
       if(answerTimeCount<=0){
         timer.cancel();
-        checkShowFinger();
+        checkShowFinger(ClickWordsTipsFrom.hint);
       }
     });
   }
@@ -243,12 +263,12 @@ class WordChildC extends BaseC{
     }
   }
 
-  checkShowFinger(){
+  checkShowFinger(ClickWordsTipsFrom clickWordsTipsFrom){
     if(UserInfoUtils.instance.userTipsNum<=0&&GuideUtils.instance.getGuideStepComplete()){
       RoutersUtils.showDialog(
           child: NoTipsD(
             addTipsCall: (){
-              checkShowFinger();
+              checkShowFinger(clickWordsTipsFrom);
             },
           )
       );
@@ -261,6 +281,7 @@ class WordChildC extends BaseC{
       if(index>=0){
         var key = wordsChooseList[index].globalKey;
         if(null!=key){
+          _clickWordsTipsFrom=clickWordsTipsFrom;
           tipsWordsCharBean=wordsChooseList[index];
           var renderBox = key.currentContext!.findRenderObject() as RenderBox;
           var offset = renderBox.localToGlobal(Offset.zero);
@@ -269,6 +290,9 @@ class WordChildC extends BaseC{
           showFinger=true;
           update(["finger"]);
           UserInfoUtils.instance.updateTipsNum(-1);
+          if(clickWordsTipsFrom==ClickWordsTipsFrom.hint){
+            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_hint_c);
+          }
         }
       }
     }
@@ -290,6 +314,10 @@ class WordChildC extends BaseC{
 
   clickTipsFinger(){
     if(null!=tipsWordsCharBean){
+      TbaUtils.instance.uploadAppPoint(
+        appPoint: AppPoint.fw_word_c,
+        params: {"word_from":_clickWordsTipsFrom.name}
+      );
       clickWordsChar(tipsWordsCharBean!);
     }
   }
@@ -306,10 +334,13 @@ class WordChildC extends BaseC{
   }
 
   clickBubble(index){
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.word_float_pop);
     bubbleShowList[index]=false;
     update(["bubble"]);
     AdUtils.instance.showAd(
         adType: AdType.reward,
+        adPosId: AdPosId.fw_old_bubble_rv,
+        adFormat: AdFomat.REWARD,
         cancelShow: (){
           _showBubble(index);
         },
@@ -354,11 +385,11 @@ class WordChildC extends BaseC{
         break;
       case EventName.showAnswerTips:
         _showAnswerTipsFrom=ShowAnswerTipsFrom.newUserGuide;
-        checkShowFinger();
+        checkShowFinger(ClickWordsTipsFrom.guide);
         break;
       case EventName.showOldUserAnswerTips:
         _showAnswerTipsFrom=ShowAnswerTipsFrom.oldUserGuide;
-        checkShowFinger();
+        checkShowFinger(ClickWordsTipsFrom.guide);
         break;
       default:
 
@@ -378,6 +409,8 @@ class WordChildC extends BaseC{
                 GuideUtils.instance.hideOverlay();
                 AdUtils.instance.showAd(
                     adType: AdType.reward,
+                    adPosId: AdPosId.fw_new_bubble_rv,
+                    adFormat: AdFomat.REWARD,
                     adShowListener: AdShowListener(
                         showAdSuccess: (MaxAd? ad) {  },
                         showAdFail: (MaxAd? ad, MaxError? error) {

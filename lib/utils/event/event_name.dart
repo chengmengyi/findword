@@ -14,4 +14,6 @@ enum EventName{
   startRotationWheel,
   stopRotationWheel,
   updateWheelChance,
+  showOrHideCash,
+  playMoneyLottie,
 }

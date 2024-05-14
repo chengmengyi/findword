@@ -1,6 +1,8 @@
 import 'package:findword/base/base_d.dart';
 import 'package:findword/dialog/buy/wheel/wheel_c.dart';
 import 'package:findword/dialog/buy/wheel/wheel_widget.dart';
+import 'package:findword/utils/max_ad/ad_pos_id.dart';
+import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:findword/widget/btn_widget.dart';
@@ -12,6 +14,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class WheelD extends BaseD<WheelC>{
+  Function() dismissDialog;
+  WheelD({required this.dismissDialog});
+
   @override
   WheelC initC() => WheelC();
 
@@ -34,6 +39,7 @@ class WheelD extends BaseD<WheelC>{
         builder: (_)=>BtnWidget(
           text: UserInfoUtils.instance.wheelNum>0?"Free To Play":"Get More Chance",
           clickCall: (){
+            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.wheel_pop_go);
             con.startWheel();
           },
           bg: "btn",
@@ -96,6 +102,7 @@ class WheelD extends BaseD<WheelC>{
       WheelWidget(),
       InkWell(
         onTap: (){
+          TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.wheel_pop_go);
           con.startWheel();
         },
         child: ImagesWidget(name: "wheel3",width: 121.w),
@@ -108,7 +115,7 @@ class WheelD extends BaseD<WheelC>{
       // SizedBox(width: 16.w,),
       // BuyCoinW(),
       const Spacer(),
-      CloseWidget(clickCall: (){ con.clickClose(); })
+      CloseWidget(clickCall: (){ con.clickClose(dismissDialog); })
     ],
   );
 }

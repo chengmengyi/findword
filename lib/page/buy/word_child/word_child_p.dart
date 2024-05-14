@@ -1,5 +1,6 @@
 import 'package:findword/base/base_w.dart';
 import 'package:findword/bean/words_char_bean.dart';
+import 'package:findword/enums/click_words_tips_from.dart';
 import 'package:findword/page/buy/word_child/word_child_c.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
@@ -332,7 +333,7 @@ class WordChildP extends BaseW<WordChildC>{
       SizedBox(width: 16.w,),
       InkWell(
         onTap: (){
-          con.checkShowFinger();
+          con.checkShowFinger(ClickWordsTipsFrom.hint);
         },
         child: Stack(
           alignment: Alignment.center,

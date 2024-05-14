@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:adjust_sdk/adjust_event_success.dart';
 import 'package:findword/utils/data.dart';
 import 'package:findword/utils/firebase_data_utils.dart';
+import 'package:findword/utils/max_ad/ad_pos_id.dart';
+import 'package:findword/utils/routers/routers_name.dart';
+import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/utils/tba_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_check_adjust_cloak/adjust/adjust_listener.dart';
 import 'package:flutter_check_adjust_cloak/cloak/cloak_listener.dart';
@@ -35,12 +39,11 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
     "pressure=${Platform.isAndroid?"upstage":"bater"}&"
     "shall=${await FlutterTbaInfo.instance.getIdfa()}&"
     "jargon=${await FlutterTbaInfo.instance.getAppVersion()}";
-    FlutterCheckAdjustCloak.instance.forceBuyUser(true);
     FlutterCheckAdjustCloak.instance.initCheck(
         cloakPath: url,
         normalModeStr: "bestial",
         blackModeStr: "topsoil",
-        adjustToken: Platform.isIOS?"inxzqyvgisqo":"",
+        adjustToken: adjustToken,
         distinctId: distinctId,
         unknownFirebaseKey: "",
         referrerConfKey: "",
@@ -53,7 +56,10 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
 
   @override
   adjustChangeToBuyUser() {
-
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.adj_organic_buy);
+    if(!FlutterCheckAdjustCloak.instance.getUserType()&&FlutterCheckAdjustCloak.instance.checkType()&&!launchPageShowing&&!buyHomeShowing){
+      RoutersUtils.offAllNamed(name: RoutersName.buyHome);
+    }
   }
 
   @override
@@ -63,7 +69,11 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
 
   @override
   adjustResultCall(String network) {
-
+    TbaUtils.instance.uploadAppPoint(
+      appPoint: AppPoint.fw_adj_suc,
+      params: {
+        "adjust_user":FlutterCheckAdjustCloak.instance.localAdjustIsBuyUser()==true?1:0
+      });
   }
 
   @override
@@ -73,12 +83,17 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
 
   @override
   firstRequestCloak() {
-
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_cloak_req);
   }
 
   @override
   firstRequestCloakSuccess() {
-
+    TbaUtils.instance.uploadAppPoint(
+      appPoint: AppPoint.fw_cloak_req,
+      params: {
+        "cloak_user":FlutterCheckAdjustCloak.instance.localCloakIsNormalUser()==true?1:0
+      }
+    );
   }
 
   @override
@@ -88,6 +103,6 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
 
   @override
   startRequestAdjust() {
-
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_adj_req);
   }
 }

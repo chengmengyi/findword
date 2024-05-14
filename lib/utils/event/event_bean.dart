@@ -4,7 +4,8 @@ import 'package:findword/utils/event/event_utils.dart';
 class EventBean{
   EventName eventName;
   int? intValue;
-  EventBean({required this.eventName,this.intValue});
+  bool? boolValue;
+  EventBean({required this.eventName,this.intValue,this.boolValue});
 
   sendEvent(){
     EventUtils.getInstance()?.fire(this);

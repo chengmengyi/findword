@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 class LightWidget extends StatelessWidget{
+  String? centerIcon;
+  LightWidget({this.centerIcon});
+
   @override
   Widget build(BuildContext context) =>Stack(
     alignment: Alignment.center,
@@ -13,7 +16,12 @@ class LightWidget extends StatelessWidget{
         width: 120.w,
         height: 120.h,
       ),
-      ImagesWidget(name: "icon_money2",width: 100.w,height: 100.h,fit: BoxFit.fill,)
+      ImagesWidget(
+        name: centerIcon??"icon_money2",
+        width: 80.w,
+        height: 80.h,
+        fit: BoxFit.fill,
+      )
     ],
   );
 }

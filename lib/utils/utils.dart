@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:findword/dialog/buy/incent/incent_d.dart';
+import 'package:findword/dialog/buy/incent/incent_from.dart';
 import 'package:findword/enums/pay_type.dart';
 import 'package:findword/utils/data.dart';
+import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/storage/storage_utils.dart';
 import 'package:findword/utils/words/words_enum.dart';
 import 'package:flutter/material.dart';
@@ -126,4 +129,8 @@ String second2HMS(int sec, {bool isEasy = true}) {
     if (!isEasy) hms = "${zeroFill(h)}:${zeroFill(m)}:${zeroFill(s)}";
   }
   return hms;
+}
+
+showIncentDialog({required IncentFrom incentFrom,required Function() closeDialog,}){
+  RoutersUtils.showDialog(child: IncentD(closeDialog: closeDialog),arguments: {"incentFrom":incentFrom});
 }

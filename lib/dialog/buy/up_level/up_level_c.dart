@@ -1,19 +1,30 @@
 import 'dart:async';
 
 import 'package:findword/base/base_c.dart';
-import 'package:findword/utils/ad_utils.dart';
+import 'package:findword/utils/max_ad/ad_pos_id.dart';
+import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/value_utils.dart';
 import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
 import 'package:flutter_max_ad/ad/ad_type.dart';
 import 'package:flutter_max_ad/ad/listener/ad_show_listener.dart';
 import 'package:flutter_max_ad/export.dart';
+import 'package:flutter_max_ad/flutter_max_ad.dart';
 
 class UpLevelC extends BaseC{
   Timer? _timer;
   var countDownTime="";
   var addNum=ValueUtils.instance.getCurrentAddNum();
+
+  @override
+  void onInit() {
+    super.onInit();
+    FlutterMaxAd.instance.loadAdByType(AdType.reward);
+    FlutterMaxAd.instance.loadAdByType(AdType.inter);
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_level_pop);
+  }
 
   @override
   void onReady() {
@@ -25,8 +36,11 @@ class UpLevelC extends BaseC{
   }
 
   clickDouble(Function() closeDialog){
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_level_pop_c);
     AdUtils.instance.showAd(
         adType: AdType.reward,
+        adPosId: AdPosId.fw_wordlevelup_rv,
+        adFormat: AdFomat.REWARD,
         adShowListener: AdShowListener(
             showAdSuccess: (MaxAd? ad) {
 
@@ -49,6 +63,7 @@ class UpLevelC extends BaseC{
     closeDialog.call();
     if(close){
       AdUtils.instance.updateUpLevelCloseNum();
+      TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_level_pop_continue);
     }
   }
 

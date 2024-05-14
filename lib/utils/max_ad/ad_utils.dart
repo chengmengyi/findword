@@ -3,13 +3,16 @@ import 'package:findword/dialog/buy/load_ad/laod_ad_d.dart';
 import 'package:findword/dialog/buy/load_fail/load_fail_d.dart';
 import 'package:findword/utils/data.dart';
 import 'package:findword/utils/firebase_data_utils.dart';
+import 'package:findword/utils/max_ad/ad_pos_id.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/storage/storage_key.dart';
 import 'package:findword/utils/storage/storage_utils.dart';
+import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
 import 'package:flutter_max_ad/ad/ad_type.dart';
 import 'package:flutter_max_ad/ad/listener/ad_show_listener.dart';
+import 'package:flutter_max_ad/ad/listener/load_ad_listener.dart';
 import 'package:flutter_max_ad/export.dart';
 import 'package:flutter_max_ad/flutter_max_ad.dart';
 
@@ -24,7 +27,7 @@ class AdUtils{
 
   AdUtils._internal();
 
-  var upLevelCloseNum=0,wheelCloseNum=0,failNum=0;
+  var upLevelCloseNum=0,wheelCloseNum=0;
 
   initAd(){
     var json = _getLocalAdJson();
@@ -43,9 +46,25 @@ class AdUtils{
       maxAdBean: maxAdBean,
       testDeviceAdvertisingIds: ["B27491C2-E99E-4743-9712-B0A14B45E4C9"]
     );
+    FlutterMaxAd.instance.setLoadAdListener(
+      LoadAdListener(
+          startLoad: (){
+            TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_request);
+          },
+          loadSuccess: (){
+            TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_fill);
+          })
+    );
   }
 
-  showAd({required AdType adType,required AdShowListener adShowListener,Function()? cancelShow}){
+  showAd({
+    required AdType adType,
+    required AdPosId adPosId,
+    required AdFomat adFormat,
+    required AdShowListener adShowListener,
+    Function()? cancelShow
+  }){
+    TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
     FlutterMaxAd.instance.loadAdByType(adType);
     RoutersUtils.showDialog(
       child: LoadAdD(
@@ -54,12 +73,13 @@ class AdUtils{
           RoutersUtils.showDialog(
               child: LoadFailD(
                 tryAgain: (){
-                  failNum++;
-                  if(failNum<=3){
-                    showAd(adType: adType, adShowListener: adShowListener,cancelShow: cancelShow);
-                  }else{
-                    failNum=0;
-                  }
+                  showAd(
+                      adType: adType,
+                      adShowListener: adShowListener,
+                      adPosId: adPosId,
+                      adFormat: adFormat,
+                      cancelShow: cancelShow
+                  );
                 },
               )
           );
@@ -67,7 +87,20 @@ class AdUtils{
         loadSuccess: (){
           FlutterMaxAd.instance.showAd(
               adType: adType,
-              adShowListener: adShowListener
+              adShowListener: AdShowListener(
+                  showAdSuccess: (MaxAd? ad) {
+                    adShowListener.showAdSuccess(ad);
+                  },
+                  showAdFail: (MaxAd? ad, MaxError? error) {
+                    adShowListener.showAdFail(ad,error);
+                  },
+                  onAdHidden: (MaxAd? ad) {
+                    adShowListener.onAdHidden(ad);
+                  },
+                  onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
+                    TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: adPosId, adFormat: adFormat);
+                    adShowListener.onAdRevenuePaidCallback(ad,maxAdInfoBean);
+                  })
           );
         },
       ),
@@ -77,45 +110,36 @@ class AdUtils{
   updateUpLevelCloseNum(){
     upLevelCloseNum++;
     if(upLevelCloseNum%FirebaseDataUtils.instance.wordInt==0){
-      FlutterMaxAd.instance.showAd(
-          adType: AdType.inter,
-          adShowListener: AdShowListener(
-              showAdSuccess: (MaxAd? ad) {
-
-              },
-              showAdFail: (MaxAd? ad, MaxError? error) {
-
-              },
-              onAdHidden: (MaxAd? ad) {
-
-              },
-              onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-              })
-      );
+      _showCancelNumIntAd();
     }
   }
 
   updateWheelCloseNum(){
     wheelCloseNum++;
     if(wheelCloseNum%FirebaseDataUtils.instance.closeWord==0){
-      FlutterMaxAd.instance.showAd(
-          adType: AdType.inter,
-          adShowListener: AdShowListener(
-              showAdSuccess: (MaxAd? ad) {
-
-              },
-              showAdFail: (MaxAd? ad, MaxError? error) {
-
-              },
-              onAdHidden: (MaxAd? ad) {
-
-              },
-              onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-              })
-      );
+      _showCancelNumIntAd();
     }
+  }
+
+  _showCancelNumIntAd(){
+    showAd(
+      adType: AdType.inter,
+      adPosId: AdPosId.fw_all_int,
+      adFormat: AdFomat.INT,
+      adShowListener: AdShowListener(
+          showAdSuccess: (MaxAd? ad) {
+
+          },
+          showAdFail: (MaxAd? ad, MaxError? error) {
+
+          },
+          onAdHidden: (MaxAd? ad) {
+
+          },
+          onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
+
+          }),
+    );
   }
 
   List<MaxAdInfoBean> _getAdList(json,adLocationName){

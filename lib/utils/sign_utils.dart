@@ -1,5 +1,6 @@
 import 'package:findword/utils/event/event_bean.dart';
 import 'package:findword/utils/event/event_name.dart';
+import 'package:findword/utils/notification_utils.dart';
 import 'package:findword/utils/storage/storage_key.dart';
 import 'package:findword/utils/storage/storage_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
@@ -35,6 +36,7 @@ class SignUtils{
     StorageUtils.instance.writeValue(StorageKey.sign, "${getTodayTimer()}_$signDays");
     UserInfoUtils.instance.updateUserCoinNum(addNum);
     EventBean(eventName: EventName.signSuccess);
+    NotificationUtils.instance.cancelNotification(NotificationsId.sign);
   }
 
   resetSign(){

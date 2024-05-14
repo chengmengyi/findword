@@ -56,7 +56,7 @@ class GuideUtils {
     if(oldUserStep==OldUserGuideStep.signDialog.name){
       RoutersUtils.showDialog(child: SignD(),arguments: {"signFrom":SignFrom.oldUser});
     }else if(oldUserStep==OldUserGuideStep.incentDialog.name){
-      RoutersUtils.showDialog(child: IncentD(closeDialog: () {  },),arguments: {"incentFrom":IncentFrom.oldUserGuide});
+      showIncentDialog(incentFrom: IncentFrom.oldUserGuide, closeDialog: (){});
     }else if(oldUserStep==OldUserGuideStep.answerTips.name){
       EventBean(eventName: EventName.showOldUserAnswerTips).sendEvent();
     }

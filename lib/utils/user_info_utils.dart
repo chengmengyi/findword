@@ -15,7 +15,7 @@ class UserInfoUtils{
     return _instance!;
   }
 
-  var userCoinNum=0,userHeartNum=10,userTipsNum=3,userLevel=1,payType=PayType.paypal,bubbleNum=0,wheelNum=0;
+  var userCoinNum=0,userHeartNum=10,userTipsNum=3,userLevel=1,payType=PayType.paypal,bubbleNum=0,wheelNum=0,todayShowedReviewDialogNum=0;
 
   UserInfoUtils._internal(){
     userCoinNum=StorageUtils.instance.getValue<int>(StorageKey.userCoinNum)??0;
@@ -24,11 +24,16 @@ class UserInfoUtils{
     userLevel=StorageUtils.instance.getValue<int>(StorageKey.userLevel)??1;
     bubbleNum=StorageUtils.instance.getValue<int>(StorageKey.bubbleNum)??0;
     payType=StorageUtils.instance.getValue<int>(StorageKey.payType)??PayType.paypal;
+    todayShowedReviewDialogNum=getTodayNum(key: StorageKey.lastShowReviewDialogTimer,defaultNum: 0);
   }
 
   updateUserCoinNum(int addNum){
     userCoinNum+=addNum;
     StorageUtils.instance.writeValue(StorageKey.userCoinNum, userCoinNum);
+    if(addNum>0){
+      EventBean(eventName: EventName.playMoneyLottie).sendEvent();
+      return;
+    }
     EventBean(eventName: EventName.updateUserCoin).sendEvent();
   }
   updateTipsNum(int addNum){
@@ -63,5 +68,10 @@ class UserInfoUtils{
   updateWheelNum(int num){
     wheelNum+=num;
     EventBean(eventName: EventName.updateWheelChance).sendEvent();
+  }
+
+  updateShowReviewDialogNum(){
+    todayShowedReviewDialogNum++;
+    StorageUtils.instance.writeValue(StorageKey.lastShowReviewDialogTimer, "${getTodayTimer()}_$todayShowedReviewDialogNum");
   }
 }

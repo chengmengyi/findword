@@ -1,7 +1,10 @@
-import 'package:findword/utils/ad_utils.dart';
+import 'package:findword/utils/data.dart';
+import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/check_user_utils.dart';
+import 'package:findword/utils/notification_utils.dart';
 import 'package:findword/utils/routers/routers_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:findword/utils/value_utils.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +16,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+
+  var launchDetails = await NotificationUtils.instance.getNotificationAppLaunchDetails();
+  if(launchDetails?.didNotificationLaunchApp??false){
+    didNotificationLaunchApp=launchDetails?.notificationResponse?.id??-1;
+  }
+
   _initApp();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -38,6 +47,8 @@ _initApp()async{
   ValueUtils.instance.initValue();
   CheckUserUtils.instance.check();
   AdUtils.instance.initAd();
+  TbaUtils.instance.uploadInstallEvent();
+  NotificationUtils.instance.initNotification();
 }
 
 class MyApp extends StatelessWidget {

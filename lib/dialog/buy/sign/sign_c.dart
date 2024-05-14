@@ -1,17 +1,20 @@
 import 'package:findword/base/base_c.dart';
 import 'package:findword/dialog/buy/sign/sign_from.dart';
-import 'package:findword/utils/ad_utils.dart';
+import 'package:findword/utils/max_ad/ad_pos_id.dart';
+import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/guide/guide_utils.dart';
 import 'package:findword/utils/guide/new_user_guide_step.dart';
 import 'package:findword/utils/guide/old_user_guide_step.dart';
 import 'package:findword/utils/guide/sign_guide_overlay.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/sign_utils.dart';
+import 'package:findword/utils/tba_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
 import 'package:flutter_max_ad/ad/ad_type.dart';
 import 'package:flutter_max_ad/ad/listener/ad_show_listener.dart';
 import 'package:flutter_max_ad/export.dart';
+import 'package:flutter_max_ad/flutter_max_ad.dart';
 
 class SignC extends BaseC{
   SignFrom signFrom=SignFrom.other;
@@ -27,6 +30,13 @@ class SignC extends BaseC{
     for (var value in signList) {
       globalList.add(GlobalKey());
     }
+    FlutterMaxAd.instance.loadAdByType(AdType.reward);
+    TbaUtils.instance.uploadAppPoint(
+      appPoint: AppPoint.fw_signin_pop,
+      params: {
+        "sign_from":signFrom==SignFrom.newUser?"new":"other"
+      }
+    );
   }
 
   @override
@@ -52,6 +62,12 @@ class SignC extends BaseC{
               GuideUtils.instance.hideOverlay();
               AdUtils.instance.showAd(
                   adType: AdType.reward,
+                  adPosId: signFrom==SignFrom.newUser?
+                  AdPosId.fw_new_rv:
+                  signFrom==SignFrom.oldUser?
+                  AdPosId.fw_old_checkin_rv:
+                  AdPosId.fw_common_checkinx2_rv,
+                  adFormat: AdFomat.REWARD,
                   adShowListener: AdShowListener(
                       showAdSuccess: (MaxAd? ad) {  },
                       showAdFail: (MaxAd? ad, MaxError? error) {
@@ -78,6 +94,12 @@ class SignC extends BaseC{
   }
 
   clickSign(int index){
+    TbaUtils.instance.uploadAppPoint(
+        appPoint: AppPoint.fw_signin_pop_c,
+        params: {
+          "sign_from":signFrom==SignFrom.newUser?"new":"other"
+        }
+    );
     if(SignUtils.instance.todaySign||index>SignUtils.instance.signDays){
       return;
     }

@@ -2,17 +2,28 @@ import 'package:findword/base/base_c.dart';
 import 'package:findword/dialog/buy/incent/incent_d.dart';
 import 'package:findword/dialog/buy/incent/incent_from.dart';
 import 'package:findword/dialog/buy/no_wheel/no_wheel_d.dart';
-import 'package:findword/utils/ad_utils.dart';
+import 'package:findword/utils/max_ad/ad_pos_id.dart';
+import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/event/event_bean.dart';
 import 'package:findword/utils/event/event_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
+import 'package:findword/utils/utils.dart';
 import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
 import 'package:flutter_max_ad/ad/ad_type.dart';
 import 'package:flutter_max_ad/ad/listener/ad_show_listener.dart';
 import 'package:flutter_max_ad/export.dart';
+import 'package:flutter_max_ad/flutter_max_ad.dart';
 
 class WheelC extends BaseC{
+
+  @override
+  void onInit() {
+    super.onInit();
+    FlutterMaxAd.instance.loadAdByType(AdType.inter);
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_wheel_pop);
+  }
 
   @override
   bool initEvent() => true;
@@ -37,9 +48,10 @@ class WheelC extends BaseC{
     EventBean(eventName: EventName.startRotationWheel).sendEvent();
   }
 
-  clickClose(){
+  clickClose(Function() dismissDialog){
     RoutersUtils.off();
     AdUtils.instance.updateWheelCloseNum();
+    dismissDialog.call();
   }
 
   @override
@@ -58,18 +70,13 @@ class WheelC extends BaseC{
   _showAd(){
     AdUtils.instance.showAd(
         adType: AdType.inter,
+        adPosId: AdPosId.fw_wheel_int,
+        adFormat: AdFomat.INT,
         adShowListener: AdShowListener(
             showAdSuccess: (MaxAd? ad) {  },
             showAdFail: (MaxAd? ad, MaxError? error) {  },
             onAdHidden: (MaxAd? ad) {
-              RoutersUtils.showDialog(
-                  child: IncentD(
-                    closeDialog: (){
-
-                    },
-                  ),
-                  arguments: {"incentFrom":IncentFrom.wheel}
-              );
+              showIncentDialog(incentFrom: IncentFrom.wheel, closeDialog: (){});
             },
             onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
 

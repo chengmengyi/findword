@@ -1,8 +1,5 @@
 import 'package:findword/base/base_d.dart';
 import 'package:findword/dialog/buy/no_money_dialog/no_money_c.dart';
-import 'package:findword/utils/event/event_bean.dart';
-import 'package:findword/utils/event/event_name.dart';
-import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/widget/btn_widget.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/text_widget.dart';
@@ -42,8 +39,7 @@ class NoMoneyD extends BaseD<NoMoneyC>{
                 BtnWidget(
                     text: "Earn More Cash",
                     clickCall: (){
-                      RoutersUtils.off();
-                      EventBean(eventName: EventName.updateHomeIndex,intValue: 0).sendEvent();
+                      con.click();
                     }),
               ],
             ),

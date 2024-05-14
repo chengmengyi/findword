@@ -1,6 +1,7 @@
 import 'package:findword/base/base_p.dart';
 import 'package:findword/page/buy/buy_home/buy_home_c.dart';
 import 'package:findword/widget/buy_coin/buy_coin_w.dart';
+import 'package:findword/widget/get_money_lottie_widget.dart';
 import 'package:findword/widget/heart/heart_widget.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/text_widget.dart';
@@ -49,6 +50,7 @@ class BuyHomeP extends BaseP<BuyHomeC>{
         ),
       ),
       _topWidget(),
+      _moneyLottieWidget(),
     ],
   );
 
@@ -111,6 +113,13 @@ class BuyHomeP extends BaseP<BuyHomeC>{
         ),
         SizedBox(width: 16.w,),
       ],
+    ),
+  );
+
+  _moneyLottieWidget()=>SafeArea(
+    top: true,
+    child: Container(
+      child: GetMoneyLottieWidget(),
     ),
   );
 }

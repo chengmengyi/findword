@@ -43,6 +43,9 @@ dependencies:
   google_mobile_ads: 4.0.0
   flutter_check_adjust_cloak: 0.1.6
   flutter_max_ad: 0.1.2
+  in_app_review: 2.0.9
+  flutter_local_notifications:
+    path: plugins/flutter_local_notifications-17.1.2
 
 
   # The following adds the Cupertino Icons font to your application.

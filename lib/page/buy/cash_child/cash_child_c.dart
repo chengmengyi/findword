@@ -8,8 +8,10 @@ import 'package:findword/utils/event/event_name.dart';
 import 'package:findword/utils/guide/checkin_guide_overlay.dart';
 import 'package:findword/utils/guide/guide_utils.dart';
 import 'package:findword/utils/guide/new_user_guide_step.dart';
+import 'package:findword/utils/max_ad/ad_pos_id.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/sign_utils.dart';
+import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/value_utils.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +52,7 @@ class CashChildC extends BaseC{
   }
 
   clickWithdraw(){
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.cash_withdraw_c);
     var chooseMoney = cashNumList[cashNumIndex];
     var chooseCoin = ValueUtils.instance.getMoneyToCoin(chooseMoney);
     var userCoinNum = UserInfoUtils.instance.userCoinNum;

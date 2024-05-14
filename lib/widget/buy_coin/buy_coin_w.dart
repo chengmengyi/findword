@@ -40,28 +40,39 @@ class BuyCoinW extends BaseW<BuyCoinC>{
           ),
         ),
         SizedBox(width: 8.w,),
-        Container(
-          width: 64.w,
-          height: 22.h,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: ["#009004".toColor(),"#CEFF65".toColor()]
+        GetBuilder<BuyCoinC>(
+          id: "cash",
+          builder: (_)=>Offstage(
+            offstage: !con.showCash,
+            child: InkWell(
+              onTap: (){
+                con.clickCash();
+              },
+              child: Container(
+                width: 64.w,
+                height: 22.h,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: ["#009004".toColor(),"#CEFF65".toColor()]
+                    ),
+                    borderRadius: BorderRadius.circular(6.w),
+                    border: Border.all(
+                        width: 1.w,
+                        color: "#009004".toColor()
+                    )
+                ),
+                child: TextWidget(
+                  text: "Cash",
+                  size: 17.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  height: 1,
+                ),
+              ),
             ),
-            borderRadius: BorderRadius.circular(6.w),
-            border: Border.all(
-              width: 1.w,
-              color: "#009004".toColor()
-            )
-          ),
-          child: TextWidget(
-            text: "Cash",
-            size: 17.sp,
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-            height: 1,
           ),
         ),
         SizedBox(width: 8.w,),

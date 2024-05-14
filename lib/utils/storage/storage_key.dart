@@ -15,4 +15,6 @@ class StorageKey{
   static const String newUserGuideTimeStr="newUserGuideTimeStr";
   static const String oldUserGuide="oldUserGuide";
   static const String bubbleNum="bubbleNum";
+  static const String installEvent="installEvent";
+  static const String lastShowReviewDialogTimer="lastShowReviewDialogTimer";
 }
