@@ -1,6 +1,6 @@
 import 'dart:io';
 
-var launchPageShowing=false,buyHomeShowing=false,clickNotification=false,didNotificationLaunchApp=-1;
+var launchPageShowing=false,buyHomeShowing=false,clickNotification=false,didNotificationLaunchApp=-1,loadAdDialogShowing=false;
 
 String adjustToken=Platform.isIOS?"inxzqyvgisqo":"";
 const List<String> chara2z=["q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n","m"];

@@ -68,6 +68,9 @@ class SignC extends BaseC{
                   AdPosId.fw_old_checkin_rv:
                   AdPosId.fw_common_checkinx2_rv,
                   adFormat: AdFomat.REWARD,
+                  cancelShow: (){
+                    _updateGuideStep();
+                  },
                   adShowListener: AdShowListener(
                       showAdSuccess: (MaxAd? ad) {  },
                       showAdFail: (MaxAd? ad, MaxError? error) {

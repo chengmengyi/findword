@@ -66,6 +66,7 @@ class AdUtils{
   }){
     TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
     FlutterMaxAd.instance.loadAdByType(adType);
+    loadAdDialogShowing=true;
     RoutersUtils.showDialog(
       child: LoadAdD(
         adType: adType,
@@ -81,6 +82,10 @@ class AdUtils{
                       cancelShow: cancelShow
                   );
                 },
+                closeCall: (){
+                  loadAdDialogShowing=false;
+                  cancelShow?.call();
+                },
               )
           );
         },
@@ -92,9 +97,11 @@ class AdUtils{
                     adShowListener.showAdSuccess(ad);
                   },
                   showAdFail: (MaxAd? ad, MaxError? error) {
+                    loadAdDialogShowing=false;
                     adShowListener.showAdFail(ad,error);
                   },
                   onAdHidden: (MaxAd? ad) {
+                    loadAdDialogShowing=false;
                     adShowListener.onAdHidden(ad);
                   },
                   onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {

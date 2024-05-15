@@ -80,12 +80,15 @@ class CashChildP extends BaseW<CashChildC>{
             children: [
               ImagesWidget(name: "icon_money2",width: 56.w,height: 56.h,),
               SizedBox(width: 2.w,),
-              StrokedTextWidget(
-                  text: "\$${ValueUtils.instance.getCoinToMoney(UserInfoUtils.instance.userCoinNum)}",
-                  fontSize: 48.sp,
-                  textColor: Colors.white,
-                  strokeColor: "#002E63".toColor(),
-                  strokeWidth: 1.w
+              GetBuilder<CashChildC>(
+                id: "money",
+                builder: (_)=>StrokedTextWidget(
+                    text: "\$${ValueUtils.instance.getCoinToMoney(UserInfoUtils.instance.userCoinNum)}",
+                    fontSize: 48.sp,
+                    textColor: Colors.white,
+                    strokeColor: "#002E63".toColor(),
+                    strokeWidth: 1.w
+                ),
               ),
             ],
           ),

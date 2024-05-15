@@ -8,6 +8,7 @@ import 'package:findword/utils/notification_utils.dart';
 import 'package:findword/utils/routers/routers_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
+import 'package:findword/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_check_adjust_cloak/flutter_check_adjust_cloak.dart';
 import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
@@ -57,28 +58,32 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
       return;
     }
     _stopTimer();
-    AdUtils.instance.showAd(
-      adType: AdType.open,
-      adPosId: AdPosId.fw_open,
-      adFormat: AdFomat.INT,
-      adShowListener: AdShowListener(
-          showAdSuccess: (MaxAd? ad) {
-          },
-          showAdFail: (MaxAd? ad, MaxError? error) {
-            _timeEnd();
-          },
-          onAdHidden: (MaxAd? ad) {
-            _timeEnd();
-          },
-          onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
+    TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
+    FlutterMaxAd.instance.showAd(
+        adType: AdType.open,
+        adShowListener: AdShowListener(
+            showAdSuccess: (MaxAd? ad) {
+            },
+            showAdFail: (MaxAd? ad, MaxError? error) {
+              _timeEnd();
+            },
+            onAdHidden: (MaxAd? ad) {
+              _timeEnd();
+            },
+            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
+              TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: AdPosId.fw_open, adFormat: AdFomat.INT);
 
-          }),
+            })
     );
   }
 
   _timeEnd(){
+    if(RoutersUtils.getParams()["fromHome"]==true){
+      RoutersUtils.off();
+      return;
+    }
     var type = FlutterCheckAdjustCloak.instance.checkType();
-    RoutersUtils.offAllNamed(name: type?RoutersName.buyHome:RoutersName.home,map: {"fromHome":RoutersUtils.getParams()["fromHome"]});
+    RoutersUtils.offAllNamed(name: type?RoutersName.buyHome:RoutersName.home);
   }
 
   _receiveNotification(){
@@ -87,22 +92,24 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
       if(null==notificationId&&didNotificationLaunchApp!=-1){
         notificationId=didNotificationLaunchApp;
       }
-      switch(notificationId){
-        case NotificationsId.regular:
-          TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_fix_inform_c);
-          break;
-        case NotificationsId.sign:
-          TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_sign_inform_c);
-          break;
-        case NotificationsId.upgrade:
-          TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_task_inform_c);
-          break;
-        case NotificationsId.paypal:
-          TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_paypel_inform_c);
-          break;
+      if(null!=notificationId&&notificationId>0){
+        switch(notificationId){
+          case NotificationsId.regular:
+            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_fix_inform_c);
+            break;
+          case NotificationsId.sign:
+            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_sign_inform_c);
+            break;
+          case NotificationsId.upgrade:
+            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_task_inform_c);
+            break;
+          case NotificationsId.paypal:
+            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_paypel_inform_c);
+            break;
+        }
+        RoutersUtils.offAllNamed(name: RoutersName.buyHome,map: {"NotificationId":notificationId});
+        didNotificationLaunchApp=-1;
       }
-      RoutersUtils.offAllNamed(name: RoutersName.buyHome,map: {"NotificationId":notificationId});
-      didNotificationLaunchApp=-1;
     });
   }
 

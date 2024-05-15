@@ -17,4 +17,5 @@ class StorageKey{
   static const String bubbleNum="bubbleNum";
   static const String installEvent="installEvent";
   static const String lastShowReviewDialogTimer="lastShowReviewDialogTimer";
+  static const String hasCommentApp="hasCommentApp";
 }

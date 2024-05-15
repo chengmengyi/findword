@@ -100,7 +100,7 @@ class UpLevelD extends BaseD<UpLevelC>{
           alignment: Alignment.topCenter,
           child: Container(
             margin: EdgeInsets.only(top: 16.w),
-            child: TextWidget(text: "Congratulations on reaching level 2", size: 13.sp, color: Colors.white),
+            child: TextWidget(text: "Congratulations on reaching level ${UserInfoUtils.instance.userLevel+1}", size: 13.sp, color: Colors.white),
           ),
         ),
         Align(

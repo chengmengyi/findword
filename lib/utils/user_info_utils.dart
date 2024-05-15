@@ -15,7 +15,7 @@ class UserInfoUtils{
     return _instance!;
   }
 
-  var userCoinNum=0,userHeartNum=10,userTipsNum=3,userLevel=1,payType=PayType.paypal,bubbleNum=0,wheelNum=0,todayShowedReviewDialogNum=0;
+  var userCoinNum=0,userHeartNum=10,userTipsNum=3,userLevel=1,payType=PayType.paypal,bubbleNum=0,wheelNum=0,todayShowedReviewDialogNum=0,hasCommentApp;
 
   UserInfoUtils._internal(){
     userCoinNum=StorageUtils.instance.getValue<int>(StorageKey.userCoinNum)??0;
@@ -25,6 +25,7 @@ class UserInfoUtils{
     bubbleNum=StorageUtils.instance.getValue<int>(StorageKey.bubbleNum)??0;
     payType=StorageUtils.instance.getValue<int>(StorageKey.payType)??PayType.paypal;
     todayShowedReviewDialogNum=getTodayNum(key: StorageKey.lastShowReviewDialogTimer,defaultNum: 0);
+    hasCommentApp=StorageUtils.instance.getValue<bool>(StorageKey.hasCommentApp)??false;
   }
 
   updateUserCoinNum(int addNum){
@@ -55,6 +56,7 @@ class UserInfoUtils{
     EventBean(eventName: EventName.updateUserLevel).sendEvent();
   }
   updatePayType(int payType){
+    this.payType=payType;
     StorageUtils.instance.writeValue(StorageKey.payType, payType);
     EventBean(eventName: EventName.updatePayType).sendEvent();
   }
@@ -73,5 +75,9 @@ class UserInfoUtils{
   updateShowReviewDialogNum(){
     todayShowedReviewDialogNum++;
     StorageUtils.instance.writeValue(StorageKey.lastShowReviewDialogTimer, "${getTodayTimer()}_$todayShowedReviewDialogNum");
+  }
+  updateHasCommentApp(){
+    hasCommentApp=true;
+    StorageUtils.instance.writeValue(StorageKey.hasCommentApp, true);
   }
 }

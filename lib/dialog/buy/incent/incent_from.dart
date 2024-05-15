@@ -1,3 +1,3 @@
 enum IncentFrom{
-  oldUserGuide,wheel,answerRightOneWord,other
+  oldUserGuide,wheel,answerRightOneWord,bubble,other
 }

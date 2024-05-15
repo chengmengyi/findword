@@ -88,6 +88,9 @@ class IncentC extends BaseC{
       case IncentFrom.answerRightOneWord:
         type="word";
         break;
+      case IncentFrom.bubble:
+        type="bubble";
+        break;
       default:
         type="";
         break;

@@ -34,15 +34,8 @@ class BuyHomeC extends BaseC with WidgetsBindingObserver{
     WidgetsBinding.instance.addObserver(this);
     TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_word_page);
     NotificationUtils.instance.registerNotifications();
-  }
 
-  @override
-  void onReady() {
-    super.onReady();
-    Future.delayed(const Duration(milliseconds: 500),(){
-      if(RoutersUtils.getParams()["fromHome"]==true){
-        return;
-      }
+    Future.delayed(const Duration(milliseconds: 1000),(){
       GuideUtils.instance.newUserGuide();
       _receiveNotification();
     });

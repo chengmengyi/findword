@@ -31,7 +31,7 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
      "nigger=$distinctId&"
     "bela=${DateTime.now().millisecondsSinceEpoch}&"
     "main=${await FlutterTbaInfo.instance.getDeviceModel()}&"
-    "bertrand=${kDebugMode?"com.findseek.wordlink.place":await FlutterTbaInfo.instance.getBuild()}&"
+    "bertrand=${kDebugMode?"com.findseek.wordlink.place":await FlutterTbaInfo.instance.getBundleId()}&"
     "typhoon=${await FlutterTbaInfo.instance.getOsVersion()}&"
     "bayport=${await FlutterTbaInfo.instance.getIdfv()}&"
     "residue=${await FlutterTbaInfo.instance.getGaid()}&"

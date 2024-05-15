@@ -32,6 +32,7 @@ class CommentC extends BaseC{
     var review = InAppReview.instance;
     var available = await review.isAvailable();
     if(available){
+      UserInfoUtils.instance.updateHasCommentApp();
       review.requestReview();
     }
   }

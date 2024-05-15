@@ -15,6 +15,7 @@ import 'package:findword/dialog/normal/heart/heart_d.dart';
 import 'package:findword/dialog/normal/words_right/words_right_d.dart';
 import 'package:findword/enums/click_words_tips_from.dart';
 import 'package:findword/enums/show_answer_tips_from.dart';
+import 'package:findword/utils/data.dart';
 import 'package:findword/utils/max_ad/ad_pos_id.dart';
 import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/event/event_bean.dart';
@@ -103,7 +104,7 @@ class WordChildC extends BaseC{
         }
         _showAnswerTipsFrom=ShowAnswerTipsFrom.other;
         if(_checkWordsAllComplete()){
-          if((UserInfoUtils.instance.userLevel+1)%3==0){
+          if(UserInfoUtils.instance.userLevel%3==0){
             UserInfoUtils.instance.updateWheelNum(1);
             RoutersUtils.showDialog(
               child: WheelD(
@@ -112,7 +113,7 @@ class WordChildC extends BaseC{
                 },
               )
             );
-          }else if((UserInfoUtils.instance.userLevel+1)%5==0){
+          }else if(UserInfoUtils.instance.userLevel%5==0){
             RoutersUtils.showDialog(
                 child: BoxD(
                   dismissDialog: (){
@@ -125,7 +126,7 @@ class WordChildC extends BaseC{
                 child: UpLevelD(
                   closeDialog: () {
                     _showNextWords();
-                    if(Platform.isIOS&&UserInfoUtils.instance.todayShowedReviewDialogNum<2){
+                    if(Platform.isIOS&&UserInfoUtils.instance.todayShowedReviewDialogNum<2&&!UserInfoUtils.instance.hasCommentApp){
                       RoutersUtils.showDialog(child: CommentD());
                     }
                   },
@@ -248,7 +249,9 @@ class WordChildC extends BaseC{
       update(["timer"]);
       if(answerTimeCount<=0){
         timer.cancel();
-        checkShowFinger(ClickWordsTipsFrom.hint);
+        if(!loadAdDialogShowing){
+          checkShowFinger(ClickWordsTipsFrom.hint);
+        }
       }
     });
   }
@@ -354,6 +357,10 @@ class WordChildC extends BaseC{
             onAdHidden: (MaxAd? ad) {
               UserInfoUtils.instance.updateBubbleNum(1);
               _showBubble(index);
+              showIncentDialog(
+                  incentFrom: IncentFrom.bubble,
+                  closeDialog: (){}
+              );
             },
             onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
 
@@ -411,6 +418,9 @@ class WordChildC extends BaseC{
                     adType: AdType.reward,
                     adPosId: AdPosId.fw_new_bubble_rv,
                     adFormat: AdFomat.REWARD,
+                    cancelShow: (){
+                      _updateNewUserGuideStep();
+                    },
                     adShowListener: AdShowListener(
                         showAdSuccess: (MaxAd? ad) {  },
                         showAdFail: (MaxAd? ad, MaxError? error) {

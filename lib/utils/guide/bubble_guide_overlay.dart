@@ -1,5 +1,3 @@
-import 'package:findword/utils/guide/guide_utils.dart';
-import 'package:findword/utils/guide/new_user_guide_step.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/text_widget.dart';

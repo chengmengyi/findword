@@ -10,7 +10,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoadFailD extends BaseD<LoadFailC>{
   Function() tryAgain;
-  LoadFailD({required this.tryAgain});
+  Function() closeCall;
+  LoadFailD({required this.tryAgain,required this.closeCall});
 
   @override
   LoadFailC initC() => LoadFailC();
@@ -19,7 +20,10 @@ class LoadFailD extends BaseD<LoadFailC>{
   Widget contentWidget() => Column(
     mainAxisSize: MainAxisSize.min,
     children: [
-      CloseWidget(clickCall: (){RoutersUtils.off();}),
+      CloseWidget(clickCall: (){
+        RoutersUtils.off();
+        closeCall.call();
+      }),
       Container(
         width: double.infinity,
         height: 318.h,

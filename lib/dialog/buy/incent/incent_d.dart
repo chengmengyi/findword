@@ -162,20 +162,19 @@ class IncentD extends BaseD<IncentC>{
     ],
   );
 
-  _btnWidget()=>InkWell(
-    onTap: (){
-      con.clickDouble(closeDialog);
-    },
-    child: Stack(
-      alignment: Alignment.topRight,
-      children: [
-        Container(
-          margin: EdgeInsets.all(8.w),
-          child: BtnWidget(text: "Claim", clickCall: (){}),
-        ),
-        ImagesWidget(name: "incent1",width: 80.w,height: 32.h,),
-      ],
-    ),
+  _btnWidget()=>Stack(
+    alignment: Alignment.topRight,
+    children: [
+      Container(
+        margin: EdgeInsets.all(8.w),
+        child: BtnWidget(
+            text: "Claim",
+            clickCall: (){
+              con.clickDouble(closeDialog);
+            }),
+      ),
+      ImagesWidget(name: "incent1",width: 80.w,height: 32.h,),
+    ],
   );
 
   _closeTextWidget()=> InkWell(

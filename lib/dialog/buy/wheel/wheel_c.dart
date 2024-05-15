@@ -68,6 +68,7 @@ class WheelC extends BaseC{
   }
 
   _showAd(){
+    UserInfoUtils.instance.updateWheelNum(-1);
     AdUtils.instance.showAd(
         adType: AdType.inter,
         adPosId: AdPosId.fw_wheel_int,
