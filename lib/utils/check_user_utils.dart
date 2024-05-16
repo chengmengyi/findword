@@ -47,7 +47,7 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
         distinctId: distinctId,
         unknownFirebaseKey: "",
         referrerConfKey: "",
-        adjustConfKey: "go_adjust_on",
+        adjustConfKey: "find_adjust_on",
         adjustListener: this,
         cloakListener: this,
         firebaseListener: this

@@ -177,6 +177,7 @@ class TbaUtils{
       "shall":await FlutterTbaInfo.instance.getIdfa(),
       "songbook":await FlutterTbaInfo.instance.getScreenRes(),
       "suave":await FlutterTbaInfo.instance.getNetworkType(),
+      "bertrand":await FlutterTbaInfo.instance.getBundleId(),
       "lama":await FlutterTbaInfo.instance.getSystemLanguage(),
       "residue":await FlutterTbaInfo.instance.getGaid(),
       "bayport":await FlutterTbaInfo.instance.getIdfv(),

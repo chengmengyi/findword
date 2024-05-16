@@ -27,7 +27,7 @@ class AdUtils{
 
   AdUtils._internal();
 
-  var upLevelCloseNum=0,wheelCloseNum=0;
+  var upLevelCloseNum=0,wheelCloseNum=0,answerRightCloseNum=0;
 
   initAd(){
     var json = _getLocalAdJson();
@@ -128,24 +128,29 @@ class AdUtils{
     }
   }
 
+  updateAnswerRightCloseNum(){
+    answerRightCloseNum++;
+    if(answerRightCloseNum%3==0){
+      _showCancelNumIntAd();
+    }
+  }
+
   _showCancelNumIntAd(){
-    showAd(
-      adType: AdType.inter,
-      adPosId: AdPosId.fw_all_int,
-      adFormat: AdFomat.INT,
-      adShowListener: AdShowListener(
-          showAdSuccess: (MaxAd? ad) {
+    TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
+    FlutterMaxAd.instance.showAd(
+        adType: AdType.inter,
+        adShowListener: AdShowListener(
+            showAdSuccess: (MaxAd? ad) {
+            },
+            showAdFail: (MaxAd? ad, MaxError? error) {
 
-          },
-          showAdFail: (MaxAd? ad, MaxError? error) {
+            },
+            onAdHidden: (MaxAd? ad) {
 
-          },
-          onAdHidden: (MaxAd? ad) {
-
-          },
-          onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-          }),
+            },
+            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
+              TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: AdPosId.fw_all_int, adFormat: AdFomat.INT);
+            })
     );
   }
 

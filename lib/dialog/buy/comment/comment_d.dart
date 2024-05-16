@@ -99,7 +99,7 @@ class CommentD extends BaseD<CommentC>{
                         BtnWidget(
                             text: "Give 5 Stars",
                             clickCall: (){
-
+                              con.clickStar(4);
                             }),
                       ],
                     ),

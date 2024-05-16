@@ -29,6 +29,7 @@ import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value_utils.dart';
 import 'package:findword/utils/words/words_enum.dart';
 import 'package:findword/utils/words/words_utils.dart';
 import 'package:flutter/material.dart';
@@ -326,7 +327,7 @@ class WordChildC extends BaseC{
   }
 
   double getLevelProgress(){
-    var d = UserInfoUtils.instance.userLevel%3/3;
+    var d = (UserInfoUtils.instance.userLevel-1)%3/3;
     if(d>=1.0){
       return 1.0;
     }else if (d<=0){
@@ -427,6 +428,7 @@ class WordChildC extends BaseC{
                           _updateNewUserGuideStep();
                         },
                         onAdHidden: (MaxAd? ad) {
+                          UserInfoUtils.instance.updateUserCoinNum(ValueUtils.instance.getCurrentAddNum());
                           _updateNewUserGuideStep();
                         },
                         onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {  }

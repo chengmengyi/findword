@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:adjust_sdk/adjust.dart';
 import 'package:findword/base/base_c.dart';
 import 'package:findword/dialog/buy/sign/sign_d.dart';
 import 'package:findword/page/buy/cash_child/cash_child_p.dart';
@@ -91,10 +91,12 @@ class BuyHomeC extends BaseC with WidgetsBindingObserver{
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch(state){
       case AppLifecycleState.resumed:
+        Adjust.onResume();
         TbaUtils.instance.uploadSessionEvent();
         _checkOpenLaunchPage();
         break;
       case AppLifecycleState.paused:
+        Adjust.onPause();
         TbaUtils.instance.uploadAppPoint(
             appPoint: AppPoint.fw_session_back,
             params: {

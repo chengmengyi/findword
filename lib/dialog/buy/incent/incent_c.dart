@@ -62,6 +62,8 @@ class IncentC extends BaseC{
       TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_double_pop_continue,params: _getAppPointParams());
       if(incentFrom==IncentFrom.wheel){
         AdUtils.instance.updateWheelCloseNum();
+      }else if(incentFrom==IncentFrom.answerRightOneWord){
+        AdUtils.instance.updateAnswerRightCloseNum();
       }
     }
     closeDialog?.call();

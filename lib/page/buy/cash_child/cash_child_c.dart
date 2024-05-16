@@ -106,7 +106,6 @@ class CashChildC extends BaseC{
       case EventName.updateBubbleNum:
       case EventName.signSuccess:
         payTypeIndex=UserInfoUtils.instance.payType;
-        print("kkk======${eventBean.eventName==EventName.signSuccess}===${SignUtils.instance.todaySign}");
         update(["page"]);
         break;
       case EventName.updateUserCoin:

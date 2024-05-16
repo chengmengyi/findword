@@ -309,7 +309,7 @@ class WordChildP extends BaseW<WordChildC>{
                             ),
                           ),
                           StrokedTextWidget(
-                              text: "${UserInfoUtils.instance.userLevel%3}/3",
+                              text: "${(UserInfoUtils.instance.userLevel-1)%3}/3",
                               fontSize: 13.sp,
                               textColor: Colors.white,
                               strokeColor: "#2F0058".toColor(),
