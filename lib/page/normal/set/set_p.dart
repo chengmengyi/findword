@@ -1,7 +1,6 @@
 import 'package:findword/base/base_p.dart';
 import 'package:findword/page/normal/set/set_c.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
-import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -36,13 +35,6 @@ class SetP extends BaseP<SetC>{
       _itemWidget(0),
       _itemWidget(1),
       _itemWidget(2),
-
-      InkWell(
-        onTap: (){
-          UserInfoUtils.instance.updateUserCoinNum(100000);
-        },
-        child: TextWidget(text: "价钱", size: 30.sp, color: Colors.white),
-      ),
     ],
   );
   

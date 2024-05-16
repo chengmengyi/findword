@@ -261,7 +261,7 @@ class CashChildP extends BaseW<CashChildC>{
           children: [
             SizedBox(width: 16.w,),
             TextWidget(
-              text: index==0?"Check in for 3 days：":"Collect 10 cash bubbles：",
+              text: index==0?"Check in for 7 days：":"Collect 10 cash bubbles：",
               size: 15.sp,
               color: "#5F2800".toColor(),
               fontWeight: FontWeight.w700,

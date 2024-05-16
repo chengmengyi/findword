@@ -39,6 +39,7 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
     "pressure=${Platform.isAndroid?"upstage":"bater"}&"
     "shall=${await FlutterTbaInfo.instance.getIdfa()}&"
     "jargon=${await FlutterTbaInfo.instance.getAppVersion()}";
+    FlutterCheckAdjustCloak.instance.forceBuyUser(true);
     FlutterCheckAdjustCloak.instance.initCheck(
         cloakPath: url,
         normalModeStr: "bestial",

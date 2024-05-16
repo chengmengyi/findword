@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:findword/utils/data.dart';
 import 'package:findword/utils/guide/guide_utils.dart';
 import 'package:findword/utils/routers/routers_name.dart';
@@ -49,11 +51,45 @@ class NotificationUtils{
             _clickNotification(notificationResponse);
             break;
           case NotificationResponseType.selectedNotificationAction:
-            // _clickNotification(notificationResponse);
+            _clickNotification(notificationResponse);
             break;
         }
       },
     );
+  }
+
+  requestPermission()async{
+    if (Platform.isIOS || Platform.isMacOS) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+          MacOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+  }
+
+  show(){
+    print("cick");
+    var androidNotificationDetails = const AndroidNotificationDetails('fw channel id', 'fw channel name',
+        channelDescription: 'fw channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker'
+    );
+    var details = NotificationDetails(android: androidNotificationDetails);
+    flutterLocalNotificationsPlugin.show(100, "hahaha", "kkkkkkk", details);
+
   }
 
   registerNotifications(){
