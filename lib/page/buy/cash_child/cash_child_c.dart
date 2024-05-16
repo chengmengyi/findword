@@ -109,7 +109,7 @@ class CashChildC extends BaseC{
         update(["page"]);
         break;
       case EventName.updateUserCoin:
-        update(["money"]);
+        update(["page"]);
         break;
       default:
 

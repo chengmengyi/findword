@@ -1,8 +1,10 @@
 import 'package:findword/base/base_p.dart';
 import 'package:findword/page/normal/set/set_c.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
+import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/text_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

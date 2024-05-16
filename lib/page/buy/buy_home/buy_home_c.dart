@@ -37,7 +37,7 @@ class BuyHomeC extends BaseC with WidgetsBindingObserver{
 
     Future.delayed(const Duration(milliseconds: 1000),(){
       GuideUtils.instance.newUserGuide();
-      _receiveNotification();
+      // _receiveNotification();
     });
   }
 

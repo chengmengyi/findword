@@ -107,7 +107,11 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
             TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_paypel_inform_c);
             break;
         }
-        RoutersUtils.offAllNamed(name: RoutersName.buyHome,map: {"NotificationId":notificationId});
+        if(buyHomeShowing){
+          RoutersUtils.off();
+        }else{
+          RoutersUtils.offAllNamed(name: RoutersName.buyHome,map: {"NotificationId":notificationId});
+        }
         didNotificationLaunchApp=-1;
       }
     });

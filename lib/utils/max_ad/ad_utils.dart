@@ -44,7 +44,7 @@ class AdUtils{
     FlutterMaxAd.instance.initMax(
       maxKey: maxAdKey.base64(),
       maxAdBean: maxAdBean,
-      testDeviceAdvertisingIds: ["B27491C2-E99E-4743-9712-B0A14B45E4C9"]
+      // testDeviceAdvertisingIds: ["B27491C2-E99E-4743-9712-B0A14B45E4C9"]
     );
     FlutterMaxAd.instance.setLoadAdListener(
       LoadAdListener(

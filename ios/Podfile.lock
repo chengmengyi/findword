@@ -5,9 +5,18 @@ PODS:
   - adjust_sdk (4.31.0):
     - Adjust (= 4.31.0)
     - Flutter
+  - Ads-Global/BUAdSDK_Compatible (5.9.0.8):
+    - Ads-Global/BURelyAdSDK
+    - Ads-Global/Dep_Compatible
+  - Ads-Global/BURelyAdSDK (5.9.0.8)
+  - Ads-Global/Dep_Compatible (5.9.0.8):
+    - BURelyFoundation_Global/Pangle (~> 0.2.1.4)
   - applovin_max (3.9.2):
     - AppLovinSDK (= 12.4.1)
     - Flutter
+  - AppLovinMediationByteDanceAdapter (5.9.0.8.0):
+    - Ads-Global/BUAdSDK_Compatible (= 5.9.0.8)
+    - AppLovinSDK
   - AppLovinMediationChartboostAdapter (9.7.0.0):
     - AppLovinSDK
     - ChartboostSDK (= 9.7.0)
@@ -37,6 +46,34 @@ PODS:
     - AppLovinSDK
     - VungleAds (= 7.3.2)
   - AppLovinSDK (12.4.1)
+  - BURelyFoundation_Global/AFNetworking (0.2.1.4)
+  - BURelyFoundation_Global/APM (0.2.1.4)
+  - BURelyFoundation_Global/Foundation (0.2.1.4):
+    - BURelyFoundation_Global/NETWork
+  - BURelyFoundation_Global/Gecko (0.2.1.4):
+    - BURelyFoundation_Global/Foundation
+  - BURelyFoundation_Global/Header (0.2.1.4)
+  - BURelyFoundation_Global/NETWork (0.2.1.4):
+    - BURelyFoundation_Global/AFNetworking
+  - BURelyFoundation_Global/Pangle (0.2.1.4):
+    - BURelyFoundation_Global/AFNetworking
+    - BURelyFoundation_Global/APM
+    - BURelyFoundation_Global/Foundation
+    - BURelyFoundation_Global/Gecko
+    - BURelyFoundation_Global/Header
+    - BURelyFoundation_Global/NETWork
+    - BURelyFoundation_Global/SDWebImage
+    - BURelyFoundation_Global/YYModel
+    - BURelyFoundation_Global/ZFPlayer
+    - BURelyFoundation_Global/Zip
+  - BURelyFoundation_Global/SDWebImage (0.2.1.4):
+    - BURelyFoundation_Global/Foundation
+  - BURelyFoundation_Global/YYModel (0.2.1.4)
+  - BURelyFoundation_Global/ZFPlayer (0.2.1.4):
+    - BURelyFoundation_Global/Foundation
+    - BURelyFoundation_Global/Zip
+  - BURelyFoundation_Global/Zip (0.2.1.4):
+    - BURelyFoundation_Global/Foundation
   - ChartboostSDK (9.7.0)
   - facebook_app_events (0.0.1):
     - FBAudienceNetwork (~> 6.15)
@@ -215,6 +252,7 @@ PODS:
 DEPENDENCIES:
   - adjust_sdk (from `.symlinks/plugins/adjust_sdk/ios`)
   - applovin_max (from `.symlinks/plugins/applovin_max/ios`)
+  - AppLovinMediationByteDanceAdapter
   - AppLovinMediationChartboostAdapter
   - AppLovinMediationFyberAdapter
   - AppLovinMediationGoogleAdapter
@@ -242,6 +280,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Adjust
+    - Ads-Global
+    - AppLovinMediationByteDanceAdapter
     - AppLovinMediationChartboostAdapter
     - AppLovinMediationFyberAdapter
     - AppLovinMediationGoogleAdapter
@@ -252,6 +292,7 @@ SPEC REPOS:
     - AppLovinMediationUnityAdsAdapter
     - AppLovinMediationVungleAdapter
     - AppLovinSDK
+    - BURelyFoundation_Global
     - ChartboostSDK
     - FBAEMKit
     - FBAudienceNetwork
@@ -315,7 +356,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Adjust: 8d4c9da5bb1d161db5d35dd091e34a641c9511ef
   adjust_sdk: 5e02361d2ccc4b1fd9dcd9a9fffa744b17f65f28
+  Ads-Global: c9c8bf2d053e153f754cd6e25a48b3269b297948
   applovin_max: f4c696080f11d8c361c7130ca1a6af8c144b99d8
+  AppLovinMediationByteDanceAdapter: 76eef9c6e6a0003d21fd43e112df23e02acb4971
   AppLovinMediationChartboostAdapter: b044be30b6c08122c5a4529279cb275ced87addd
   AppLovinMediationFyberAdapter: 068792cae6c9e088870dda003f3122f6018d4f22
   AppLovinMediationGoogleAdapter: af6bc572387cc793864bfee326ad662802b113a1
@@ -326,6 +369,7 @@ SPEC CHECKSUMS:
   AppLovinMediationUnityAdsAdapter: ed0d5660f47dda6fb1293244c1371b52a2a7389d
   AppLovinMediationVungleAdapter: bcf8233eae6ca3668a1b7ed47bcc0039583d60d3
   AppLovinSDK: c57ad0d34625c971d2db127f8ef60570b28ff51a
+  BURelyFoundation_Global: 17ed9cd58d138feefd8c0711dd3294766adcb28e
   ChartboostSDK: 0cd093c90a5a21c89783fe5be486e511fb2dbfc8
   facebook_app_events: acb7c266406d3e3592bcf846d7184172ecfd6492
   FBAEMKit: 97eaf41451b49691447df831f7f425229ae64b66
@@ -366,6 +410,6 @@ SPEC CHECKSUMS:
   VungleAds: 0d696ed96dd7d715a9432997356d59b2e3b58882
   webview_flutter_wkwebview: 4f3e50f7273d31e5500066ed267e3ae4309c5ae4
 
-PODFILE CHECKSUM: df0ae696d57d7f1a1b9a14463e99cac945390b8f
+PODFILE CHECKSUM: 581536cee88d936c6d05ce0607ab832247acde7f
 
 COCOAPODS: 1.15.2

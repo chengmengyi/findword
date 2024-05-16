@@ -69,7 +69,7 @@ class SignC extends BaseC{
               AdUtils.instance.showAd(
                   adType: AdType.reward,
                   adPosId: signFrom==SignFrom.newUser?
-                  AdPosId.fw_new_rv:
+                  AdPosId.fw_new_checkin_rv:
                   signFrom==SignFrom.oldUser?
                   AdPosId.fw_old_checkin_rv:
                   AdPosId.fw_common_checkinx2_rv,

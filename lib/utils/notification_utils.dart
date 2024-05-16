@@ -79,19 +79,6 @@ class NotificationUtils{
     }
   }
 
-  show(){
-    print("cick");
-    var androidNotificationDetails = const AndroidNotificationDetails('fw channel id', 'fw channel name',
-        channelDescription: 'fw channel description',
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker'
-    );
-    var details = NotificationDetails(android: androidNotificationDetails);
-    flutterLocalNotificationsPlugin.show(100, "hahaha", "kkkkkkk", details);
-
-  }
-
   registerNotifications(){
     _showNotifications(
         NotificationsId.regular,

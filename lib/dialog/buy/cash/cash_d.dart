@@ -45,7 +45,7 @@ class CashD extends BaseD<CashC>{
                 BtnWidget(
                     text: "Withdraw Now",
                     clickCall: (){
-                      con.clickWithdraw();
+                      con.clickWithdraw(money);
                     }),
               ],
             ),
