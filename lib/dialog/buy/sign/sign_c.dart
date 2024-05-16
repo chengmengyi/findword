@@ -59,6 +59,12 @@ class SignC extends BaseC{
             offset: offset,
             index: SignUtils.instance.signDays,
             click: (){
+              TbaUtils.instance.uploadAppPoint(
+                  appPoint: AppPoint.fw_signin_pop_c,
+                  params: {
+                    "sign_from":signFrom==SignFrom.newUser?"new":"old"
+                  }
+              );
               GuideUtils.instance.hideOverlay();
               AdUtils.instance.showAd(
                   adType: AdType.reward,
@@ -100,7 +106,7 @@ class SignC extends BaseC{
     TbaUtils.instance.uploadAppPoint(
         appPoint: AppPoint.fw_signin_pop_c,
         params: {
-          "sign_from":signFrom==SignFrom.newUser?"new":"other"
+          "sign_from":"other"
         }
     );
     if(SignUtils.instance.todaySign||index>SignUtils.instance.signDays){

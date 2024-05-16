@@ -89,7 +89,7 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
   @override
   firstRequestCloakSuccess() {
     TbaUtils.instance.uploadAppPoint(
-      appPoint: AppPoint.fw_cloak_req,
+      appPoint: AppPoint.fw_cloak_suc,
       params: {
         "cloak_user":FlutterCheckAdjustCloak.instance.localCloakIsNormalUser()==true?1:0
       }
