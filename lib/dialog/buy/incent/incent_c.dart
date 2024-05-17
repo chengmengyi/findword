@@ -24,6 +24,9 @@ class IncentC extends BaseC{
   void onInit() {
     super.onInit();
     incentFrom=RoutersUtils.getParams()["incentFrom"]??IncentFrom.other;
+    if(incentFrom==IncentFrom.wheel){
+      addNum=ValueUtils.instance.getWheelAddNum();
+    }
     FlutterMaxAd.instance.loadAdByType(AdType.reward);
     TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_double_pop,params: _getAppPointParams());
   }

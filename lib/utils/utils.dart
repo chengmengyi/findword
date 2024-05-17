@@ -98,7 +98,7 @@ extension StringShowToast on String{
     Fluttertoast.showToast(
       msg: this,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
+      gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
       backgroundColor: Colors.black45,
       textColor: Colors.white,

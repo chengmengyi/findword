@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:adjust_sdk/adjust.dart';
 import 'package:findword/base/base_c.dart';
 import 'package:findword/dialog/buy/sign/sign_d.dart';
+import 'package:findword/dialog/buy/sign/sign_from.dart';
 import 'package:findword/page/buy/cash_child/cash_child_p.dart';
 import 'package:findword/page/buy/word_child/word_child_p.dart';
 import 'package:findword/utils/data.dart';

@@ -13,6 +13,7 @@ import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/sign_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
+import 'package:findword/utils/utils.dart';
 import 'package:findword/utils/value_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -43,11 +44,12 @@ class CashChildC extends BaseC{
   clickTaskItem(int index){
     if(index==0){
       if(SignUtils.instance.todaySign){
+        "Signed in today, Please come back tomorrow".showToast();
         return;
       }
       RoutersUtils.showDialog(child: SignD());
     }else{
-      EventBean(eventName: EventName.updateHomeIndex,intValue: 0).sendEvent();
+      EventBean(eventName: EventName.updateHomeIndex,intValue: 0,boolValue: true).sendEvent();
     }
   }
 

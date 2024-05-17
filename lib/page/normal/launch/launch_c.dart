@@ -72,7 +72,6 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
             },
             onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
               TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: AdPosId.fw_open, adFormat: AdFomat.INT);
-
             })
     );
   }

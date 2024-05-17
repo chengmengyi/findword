@@ -389,7 +389,7 @@ class WordChildC extends BaseC{
         update(["level","progress"]);
         break;
       case EventName.showWordBubbleGuide:
-        _showWordBubbleGuide();
+        _showWordBubbleGuide(true);
         break;
       case EventName.showAnswerTips:
         _showAnswerTipsFrom=ShowAnswerTipsFrom.newUserGuide;
@@ -399,13 +399,18 @@ class WordChildC extends BaseC{
         _showAnswerTipsFrom=ShowAnswerTipsFrom.oldUserGuide;
         checkShowFinger(ClickWordsTipsFrom.guide);
         break;
+      case EventName.updateHomeIndex:
+        if(eventBean.intValue==0&&eventBean.boolValue==true){
+          _showWordBubbleGuide(false);
+        }
+        break;
       default:
 
         break;
     }
   }
 
-  _showWordBubbleGuide(){
+  _showWordBubbleGuide(bool fromUserGuide){
     var box = bubbleGlobal.currentContext!.findRenderObject()! as RenderBox;
     var offset = box.localToGlobal(Offset.zero);
     if(null!=context){
@@ -420,16 +425,16 @@ class WordChildC extends BaseC{
                     adPosId: AdPosId.fw_new_bubble_rv,
                     adFormat: AdFomat.REWARD,
                     cancelShow: (){
-                      _updateNewUserGuideStep();
+                      _updateNewUserGuideStep(fromUserGuide);
                     },
                     adShowListener: AdShowListener(
                         showAdSuccess: (MaxAd? ad) {  },
                         showAdFail: (MaxAd? ad, MaxError? error) {
-                          _updateNewUserGuideStep();
+                          _updateNewUserGuideStep(fromUserGuide);
                         },
                         onAdHidden: (MaxAd? ad) {
                           UserInfoUtils.instance.updateUserCoinNum(ValueUtils.instance.getCurrentAddNum());
-                          _updateNewUserGuideStep();
+                          _updateNewUserGuideStep(fromUserGuide);
                         },
                         onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {  }
                     )
@@ -440,8 +445,15 @@ class WordChildC extends BaseC{
     }
   }
 
-  _updateNewUserGuideStep(){
-    GuideUtils.instance.updateNewUserGuide(NewUserGuideStep.answerTips);
+  _updateNewUserGuideStep(bool fromUserGuide){
+    if(fromUserGuide){
+      GuideUtils.instance.updateNewUserGuide(NewUserGuideStep.answerTips);
+    }else{
+      showIncentDialog(
+          incentFrom: IncentFrom.bubble,
+          closeDialog: (){}
+      );
+    }
   }
 
 

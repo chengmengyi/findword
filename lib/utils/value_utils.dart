@@ -42,6 +42,23 @@ class ValueUtils {
     return 3000;
   }
 
+  int getWheelAddNum(){
+    var common = _valueBean?.wheel??[];
+    if(common.isEmpty){
+      return 30000;
+    }
+    var coinNum = UserInfoUtils.instance.userCoinNum;
+    if(coinNum>(common.last.endNumber??3000000)){
+      return (common.last.step??[18000]).random();
+    }
+    for (var value in common) {
+      if(coinNum>=(value.firstNumber??0)&&coinNum<(value.endNumber??0)){
+        return (value.step??[30000]).random();
+      }
+    }
+    return 30000;
+  }
+
   double getCoinToMoney(int coin){
     var fixed = (coin/(_valueBean?.conversion??10000)).toStringAsFixed(2);
     return fixed.toDouble();

@@ -41,6 +41,7 @@ class SignC extends BaseC{
 
   @override
   void onReady() {
+    super.onReady();
     _checkShowGuideOverlay();
   }
 
@@ -51,13 +52,17 @@ class SignC extends BaseC{
     if(signFrom!=SignFrom.newUser&&signFrom!=SignFrom.oldUser){
       return;
     }
-    var box = globalList[SignUtils.instance.signDays].currentContext!.findRenderObject()! as RenderBox;
+
+    var buildContext = globalList[SignUtils.instance.signDays].currentContext!;
+    var box = buildContext.findRenderObject()! as RenderBox;
     var offset = box.localToGlobal(Offset.zero);
     GuideUtils.instance.showOverlay(
         context: context!,
         widget: SignGuideOverlay(
             offset: offset,
+            size: buildContext.size,
             index: SignUtils.instance.signDays,
+            addNum: signList[SignUtils.instance.signDays],
             click: (){
               TbaUtils.instance.uploadAppPoint(
                   appPoint: AppPoint.fw_signin_pop_c,

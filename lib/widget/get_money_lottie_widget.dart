@@ -19,14 +19,26 @@ class _GetMoneyLottieWidgetState extends State<GetMoneyLottieWidget> with Ticker
   @override
   void initState() {
     super.initState();
-    _controller=AnimationController(vsync: this,duration: const Duration(milliseconds: 3000))..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
+    _controller=AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 3000)
+    )..addListener(() {
+      if(_controller.value>=0.5){
+        _controller.stop();
         setState(() {
           showLottie=false;
         });
         EventBean(eventName: EventName.updateUserCoin).sendEvent();
       }
     });
+    //   ..addStatusListener((status) {
+    //   if (status == AnimationStatus.completed) {
+    //     setState(() {
+    //       showLottie=false;
+    //     });
+    //     EventBean(eventName: EventName.updateUserCoin).sendEvent();
+    //   }
+    // });
     bus=EventUtils.getInstance()?.on<EventBean>().listen((data) {
       if(data.eventName==EventName.playMoneyLottie){
         setState(() {
@@ -41,9 +53,9 @@ class _GetMoneyLottieWidgetState extends State<GetMoneyLottieWidget> with Ticker
   Widget build(BuildContext context) => Offstage(
     offstage: !showLottie,
     child: Lottie.asset(
-        'asset/get.zip',
-        repeat: false,
-        controller: _controller
+      'asset/get.zip',
+      repeat: false,
+      controller: _controller,
     ),
   );
 
