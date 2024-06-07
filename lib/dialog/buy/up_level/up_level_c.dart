@@ -42,18 +42,13 @@ class UpLevelC extends BaseC{
         adPosId: AdPosId.fw_wordlevelup_rv,
         adFormat: AdFomat.REWARD,
         adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {
-
-            },
             showAdFail: (MaxAd? ad, MaxError? error) {
 
             },
             onAdHidden: (MaxAd? ad) {
               clickClose(closeDialog,num: addNum*2);
             },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-            })
+        )
     );
   }
 

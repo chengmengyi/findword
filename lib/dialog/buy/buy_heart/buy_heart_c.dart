@@ -17,15 +17,12 @@ class BuyHeartC extends BaseC{
         adPosId: AdPosId.fw_addchance_rv,
         adFormat: AdFomat.REWARD,
         adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {  },
             showAdFail: (MaxAd? ad, MaxError? error) {  },
             onAdHidden: (MaxAd? ad) {
               UserInfoUtils.instance.updateHeartNum(3);
               RoutersUtils.off();
             },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-            })
+        )
     );
   }
 

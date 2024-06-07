@@ -38,9 +38,6 @@ class IncentC extends BaseC{
         adPosId: _getAdPosIdByFrom(),
         adFormat: AdFomat.REWARD,
         adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {
-
-            },
             showAdFail: (MaxAd? ad, MaxError? error) {
               if(incentFrom==IncentFrom.oldUserGuide){
                 clickClose(closeDialog: closeDialog);
@@ -49,9 +46,7 @@ class IncentC extends BaseC{
             onAdHidden: (MaxAd? ad) {
               clickClose(num: addNum*2,closeDialog: closeDialog);
             },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-            })
+        )
     );
   }
 

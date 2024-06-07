@@ -83,7 +83,6 @@ class SignC extends BaseC{
                     _updateGuideStep();
                   },
                   adShowListener: AdShowListener(
-                      showAdSuccess: (MaxAd? ad) {  },
                       showAdFail: (MaxAd? ad, MaxError? error) {
                         _updateGuideStep();
                       },
@@ -91,7 +90,6 @@ class SignC extends BaseC{
                         SignUtils.instance.sign(signList[SignUtils.instance.signDays]);
                         _updateGuideStep();
                       },
-                      onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {  }
                   )
               );
             })

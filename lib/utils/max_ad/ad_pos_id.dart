@@ -63,5 +63,7 @@ enum AppPoint{
   fw_sign_inform_c,
   fw_task_inform_c,
   fw_paypel_inform_c,
+  fw_launch_page,
+  word_float_pop_guide,
   unknown
 }

@@ -42,12 +42,10 @@ class NewUserC extends BaseC{
         adPosId: AdPosId.fw_new_rv,
         adFormat: AdFomat.REWARD,
         adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {  },
             showAdFail: (MaxAd? ad, MaxError? error) {  },
             onAdHidden: (MaxAd? ad) {
               _closeDialog(addNum*2);
             },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {  }
         )
     );
   }

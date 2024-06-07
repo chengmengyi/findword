@@ -74,14 +74,11 @@ class WheelC extends BaseC{
         adPosId: AdPosId.fw_wheel_int,
         adFormat: AdFomat.INT,
         adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {  },
             showAdFail: (MaxAd? ad, MaxError? error) {  },
             onAdHidden: (MaxAd? ad) {
               showIncentDialog(incentFrom: IncentFrom.wheel, closeDialog: (){});
             },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-            })
+        )
     );
   }
 }

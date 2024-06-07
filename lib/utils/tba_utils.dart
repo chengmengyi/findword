@@ -24,7 +24,6 @@ class TbaUtils{
   TbaUtils._internal();
 
   uploadInstallEvent({int tryNum=3})async{
-    uploadSessionEvent();
     var has = StorageUtils.instance.getValue<bool>(StorageKey.installEvent)??false;
     if(has){
       return;

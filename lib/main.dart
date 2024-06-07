@@ -1,3 +1,4 @@
+import 'package:findword/utils/app_state_utils.dart';
 import 'package:findword/utils/data.dart';
 import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/check_user_utils.dart';
@@ -38,14 +39,17 @@ void main() async{
         //底部导航栏颜色
         systemNavigationBarColor: Colors.white,
       ));
+
   runApp(const MyApp());
 }
 
 _initApp()async{
+  AppStateUtils.instance.setListener();
   await GetStorage.init();
   MobileAds.instance.initialize();
   ValueUtils.instance.initValue();
   CheckUserUtils.instance.check();
+  CheckUserUtils.instance.setNetworkListener();
   AdUtils.instance.initAd();
   TbaUtils.instance.uploadInstallEvent();
   NotificationUtils.instance.initNotification();

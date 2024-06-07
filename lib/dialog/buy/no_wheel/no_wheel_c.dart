@@ -24,16 +24,13 @@ class NoWheelC extends BaseC{
         adPosId: AdPosId.fw_wheeladdchance_rv,
         adFormat: AdFomat.REWARD,
         adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {  },
             showAdFail: (MaxAd? ad, MaxError? error) {  },
             onAdHidden: (MaxAd? ad) {
               UserInfoUtils.instance.updateWheelNum(3);
               RoutersUtils.off();
               addChanceCall.call();
             },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-            })
+        )
     );
   }
 }

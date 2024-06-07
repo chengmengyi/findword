@@ -62,80 +62,80 @@ class AdUtils{
     required AdPosId adPosId,
     required AdFomat adFormat,
     required AdShowListener adShowListener,
-    Function()? cancelShow
+    Function()? cancelShow,
+    int tryNum=1,
   }){
     TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
     FlutterMaxAd.instance.loadAdByType(adType);
     loadAdDialogShowing=true;
     var hasCache = FlutterMaxAd.instance.checkHasCache(adType);
     if(hasCache){
-      _loadSuccessAndShowAD(
+      FlutterMaxAd.instance.showAd(
           adType: adType,
-          adPosId: adPosId,
-          adFormat: adFormat,
-          adShowListener: adShowListener
+          adShowListener: AdShowListener(
+              showAdSuccess: (MaxAd? ad, MaxAdInfoBean? maxAdInfoBean) {
+                TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: adPosId, adFormat: adFormat);
+                adShowListener.showAdSuccess?.call(ad,maxAdInfoBean);
+              },
+              showAdFail: (MaxAd? ad, MaxError? error) {
+                loadAdDialogShowing=false;
+                adShowListener.showAdFail?.call(ad,error);
+              },
+              onAdHidden: (MaxAd? ad) {
+                loadAdDialogShowing=false;
+                adShowListener.onAdHidden(ad);
+              },
+              onAdRevenuePaidCallback: (MaxAd ad) {
+                adShowListener.onAdRevenuePaidCallback?.call(ad);
+              })
       );
       return;
     }
-
-    RoutersUtils.showDialog(
-      child: LoadAdD(
-        adType: adType,
-        loadFail: (){
-          RoutersUtils.showDialog(
-              child: LoadFailD(
-                tryAgain: (){
-                  showAd(
-                      adType: adType,
-                      adShowListener: adShowListener,
-                      adPosId: adPosId,
-                      adFormat: adFormat,
-                      cancelShow: cancelShow
-                  );
-                },
-                closeCall: (){
-                  loadAdDialogShowing=false;
-                  cancelShow?.call();
-                },
-              )
-          );
-        },
-        loadSuccess: (){
-          _loadSuccessAndShowAD(
-              adType: adType,
-              adPosId: adPosId,
-              adFormat: adFormat,
-              adShowListener: adShowListener
-          );
-        },
-      ),
-    );
+    if(tryNum>=1){
+      RoutersUtils.showDialog(
+          child: LoadFailD(
+            tryAgain: (){
+              showAd(
+                adType: adType,
+                adShowListener: adShowListener,
+                adPosId: adPosId,
+                adFormat: adFormat,
+                cancelShow: cancelShow,
+                tryNum: tryNum-1
+              );
+            },
+            closeCall: (){
+              loadAdDialogShowing=false;
+              cancelShow?.call();
+            },
+          )
+      );
+      return;
+    }
+    "Show ad fail".showToast();
+    adShowListener.showAdFail?.call(null,null);
   }
 
-  _loadSuccessAndShowAD({
-    required AdType adType,
-    required AdPosId adPosId,
-    required AdFomat adFormat,
-    required AdShowListener adShowListener,
-}){
+  showOpenAd({required Function() noCache}){
+    var hasCache = FlutterMaxAd.instance.checkHasCache(AdType.open);
+    if(!hasCache){
+      noCache.call();
+      return;
+    }
+    TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
     FlutterMaxAd.instance.showAd(
-        adType: adType,
-        adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {
-              adShowListener.showAdSuccess?.call(ad);
-            },
-            showAdFail: (MaxAd? ad, MaxError? error) {
-              loadAdDialogShowing=false;
-              adShowListener.showAdFail?.call(ad,error);
-            },
-            onAdHidden: (MaxAd? ad) {
-              loadAdDialogShowing=false;
-              adShowListener.onAdHidden(ad);
-            },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-              TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: adPosId, adFormat: adFormat);
-              adShowListener.onAdRevenuePaidCallback?.call(ad,maxAdInfoBean);
-            })
+      adType: AdType.open,
+      adShowListener: AdShowListener(
+        showAdSuccess: (ad, MaxAdInfoBean? maxAdInfoBean){
+          TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: AdPosId.fw_open, adFormat: AdFomat.INT);
+        },
+        onAdHidden: (ad){
+
+        },
+        showAdFail: (ad,error){
+          FlutterMaxAd.instance.loadAdByType(AdType.open);
+        },
+      )
     );
   }
 
@@ -165,17 +165,14 @@ class AdUtils{
     FlutterMaxAd.instance.showAd(
         adType: AdType.inter,
         adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {
-            },
-            showAdFail: (MaxAd? ad, MaxError? error) {
+          showAdSuccess: (ad, MaxAdInfoBean? maxAdInfoBean){
+            TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: AdPosId.fw_all_int, adFormat: AdFomat.INT);
 
-            },
+          },
             onAdHidden: (MaxAd? ad) {
 
             },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-              TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: AdPosId.fw_all_int, adFormat: AdFomat.INT);
-            })
+        )
     );
   }
 

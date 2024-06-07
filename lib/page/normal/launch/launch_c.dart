@@ -18,7 +18,7 @@ import 'package:flutter_max_ad/export.dart';
 import 'package:flutter_max_ad/flutter_max_ad.dart';
 
 class LaunchC extends BaseC with WidgetsBindingObserver{
-  var progress=0.0,_count=0,_totalCount=200,_onResume=true;
+  var progress=0.0,_count=0,_totalCount=100,_onResume=true;
   Timer? _timer;
 
   @override
@@ -26,94 +26,77 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
     super.onInit();
     launchPageShowing=true;
     WidgetsBinding.instance.addObserver(this);
-    if(FlutterCheckAdjustCloak.instance.getUserType()){
-      FlutterMaxAd.instance.loadAdByType(AdType.open);
-    }
+    FlutterMaxAd.instance.loadAdByType(AdType.open);
+    TbaUtils.instance.uploadSessionEvent();
     _receiveNotification();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-    _startProgressTimer();
+    Future((){
+      _startProgressTimer();
+    });
   }
 
   _startProgressTimer(){
-    _timer=Timer.periodic(const Duration(milliseconds: 50), (timer) {
+    _timer=Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if(_onResume){
         _count++;
         progress=_count/_totalCount;
         update(["progress"]);
-        _checkAd();
+        _checkAd(false);
         if(_count>=_totalCount){
-          timer.cancel();
-          _timeEnd();
+          FlutterCheckAdjustCloak.instance.checkType();
+          _timeEnd(true);
         }
       }
     });
   }
 
-  _checkAd()async{
-    if(!FlutterCheckAdjustCloak.instance.getUserType()||!FlutterMaxAd.instance.checkHasCache(AdType.open)||_count<60){
+  _checkAd(bool end)async{
+    var userType = FlutterCheckAdjustCloak.instance.getUserType();
+    if(end&&!userType){
+      _timeEnd(userType);
       return;
     }
-    _stopTimer();
-    TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
-    FlutterMaxAd.instance.showAd(
-        adType: AdType.open,
-        adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {
-            },
-            showAdFail: (MaxAd? ad, MaxError? error) {
-              _timeEnd();
-            },
-            onAdHidden: (MaxAd? ad) {
-              _timeEnd();
-            },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-              TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: AdPosId.fw_open, adFormat: AdFomat.INT);
-            })
-    );
+    if(userType&&FlutterMaxAd.instance.checkHasCache(AdType.open)){
+      _timeEnd(userType);
+      AdUtils.instance.showOpenAd(
+        noCache: (){}
+      );
+    }
   }
 
-  _timeEnd(){
-    if(RoutersUtils.getParams()["fromHome"]==true){
+  _timeEnd(bool userType){
+    _stopTimer();
+    if(userType&&buyHomeShowing){
       RoutersUtils.off();
       return;
     }
-    var type = FlutterCheckAdjustCloak.instance.checkType();
-    RoutersUtils.offAllNamed(name: type?RoutersName.buyHome:RoutersName.home);
+    RoutersUtils.offAllNamed(name: userType?RoutersName.buyHome:RoutersName.home);
   }
 
   _receiveNotification(){
-    Future.delayed(const Duration(milliseconds: 1000),(){
-      var notificationId = RoutersUtils.getParams()["NotificationId"];
-      if(null==notificationId&&didNotificationLaunchApp!=-1){
-        notificationId=didNotificationLaunchApp;
+    var notificationId = RoutersUtils.getParams()["NotificationId"];
+    if(null==notificationId&&didNotificationLaunchApp!=-1){
+      notificationId=didNotificationLaunchApp;
+    }
+    var from="icon";
+    if(null!=notificationId&&notificationId>0){
+      from="push";
+      switch(notificationId){
+        case NotificationsId.regular:
+          TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_fix_inform_c);
+          break;
+        case NotificationsId.sign:
+          TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_sign_inform_c);
+          break;
+        case NotificationsId.upgrade:
+          TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_task_inform_c);
+          break;
+        case NotificationsId.paypal:
+          TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_paypel_inform_c);
+          break;
       }
-      if(null!=notificationId&&notificationId>0){
-        switch(notificationId){
-          case NotificationsId.regular:
-            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_fix_inform_c);
-            break;
-          case NotificationsId.sign:
-            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_sign_inform_c);
-            break;
-          case NotificationsId.upgrade:
-            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_task_inform_c);
-            break;
-          case NotificationsId.paypal:
-            TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_paypel_inform_c);
-            break;
-        }
-        if(buyHomeShowing){
-          RoutersUtils.off();
-        }else{
-          RoutersUtils.offAllNamed(name: RoutersName.buyHome,map: {"NotificationId":notificationId});
-        }
-        didNotificationLaunchApp=-1;
-      }
-    });
+      didNotificationLaunchApp=-1;
+    }
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_launch_page,params: {"source_from":from});
   }
 
   @override

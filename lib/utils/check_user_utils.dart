@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:adjust_sdk/adjust_event_success.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:findword/utils/data.dart';
 import 'package:findword/utils/firebase_data_utils.dart';
 import 'package:findword/utils/max_ad/ad_pos_id.dart';
@@ -8,13 +8,11 @@ import 'package:findword/utils/routers/routers_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_check_adjust_cloak/adjust/adjust_listener.dart';
-import 'package:flutter_check_adjust_cloak/cloak/cloak_listener.dart';
 import 'package:flutter_check_adjust_cloak/flutter_check_adjust_cloak.dart';
-import 'package:flutter_check_adjust_cloak/util/firebase_listener.dart';
+import 'package:flutter_check_adjust_cloak/util/check_listener.dart';
 import 'package:flutter_tba_info/flutter_tba_info.dart';
 
-class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
+class CheckUserUtils implements CheckListener{
   factory CheckUserUtils()=>_getInstance();
   static CheckUserUtils get instance => _getInstance();
   static CheckUserUtils? _instance;
@@ -40,24 +38,30 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
     "shall=${await FlutterTbaInfo.instance.getIdfa()}&"
     "jargon=${await FlutterTbaInfo.instance.getAppVersion()}";
     FlutterCheckAdjustCloak.instance.initCheck(
-        cloakPath: url,
-        normalModeStr: "bestial",
-        blackModeStr: "topsoil",
-        adjustToken: adjustToken,
-        distinctId: distinctId,
-        unknownFirebaseKey: "",
-        referrerConfKey: "",
-        adjustConfKey: "find_adjust_on",
-        adjustListener: this,
-        cloakListener: this,
-        firebaseListener: this
+      cloakPath: url,
+      normalModeStr: "bestial",
+      blackModeStr: "topsoil",
+      adjustToken: adjustToken,
+      distinctId: distinctId,
+      unknownFirebaseKey: "",
+      referrerConfKey: "",
+      adjustConfKey: "find_adjust_on",
+      checkListener: this
     );
   }
 
   @override
   adjustChangeToBuyUser() {
     TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.adj_organic_buy);
-    if(!FlutterCheckAdjustCloak.instance.getUserType()&&FlutterCheckAdjustCloak.instance.checkType()&&!launchPageShowing&&!buyHomeShowing){
+    _changeUserPage();
+  }
+
+  _changeUserPage(){
+    if(!FlutterCheckAdjustCloak.instance.getUserType()
+        &&FlutterCheckAdjustCloak.instance.checkType()
+        &&!launchPageShowing
+        &&!buyHomeShowing
+    ){
       RoutersUtils.offAllNamed(name: RoutersName.buyHome);
     }
   }
@@ -94,6 +98,7 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
         "cloak_user":FlutterCheckAdjustCloak.instance.localCloakIsNormalUser()==true?1:0
       }
     );
+    _changeUserPage();
   }
 
   @override
@@ -104,5 +109,13 @@ class CheckUserUtils implements AdjustListener,CloakListener,FirebaseListener{
   @override
   startRequestAdjust() {
     TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_adj_req);
+  }
+
+  setNetworkListener(){
+    Connectivity().onConnectivityChanged.listen((event) {
+      if(!event.contains(ConnectivityResult.none)){
+        FlutterCheckAdjustCloak.instance.requestCloakAgain();
+      }
+    });
   }
 }

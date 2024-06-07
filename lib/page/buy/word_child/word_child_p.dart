@@ -330,34 +330,34 @@ class WordChildP extends BaseW<WordChildC>{
 
   _bottomWidget()=>Row(
     children: [
-      SizedBox(width: 16.w,),
-      InkWell(
-        onTap: (){
-          con.checkShowFinger(ClickWordsTipsFrom.hint);
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            ImagesWidget(name: "play4",width: 120.w,height: 40.h,),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ImagesWidget(name: "play5",width: 32.w,height: 32.h,),
-                SizedBox(width: 6.w,),
-                GetBuilder<WordChildC>(
-                  id: "tips",
-                  builder: (_)=>TextWidget(
-                    text: "${UserInfoUtils.instance.userTipsNum}/3",
-                    size: 17.sp,
-                    color: "#002E63".toColor(),
-                    fontWeight: FontWeight.w700,
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
+      // SizedBox(width: 16.w,),
+      // InkWell(
+      //   onTap: (){
+      //     con.checkShowFinger(ClickWordsTipsFrom.hint);
+      //   },
+      //   child: Stack(
+      //     alignment: Alignment.center,
+      //     children: [
+      //       ImagesWidget(name: "play4",width: 120.w,height: 40.h,),
+      //       Row(
+      //         mainAxisSize: MainAxisSize.min,
+      //         children: [
+      //           ImagesWidget(name: "play5",width: 32.w,height: 32.h,),
+      //           SizedBox(width: 6.w,),
+      //           GetBuilder<WordChildC>(
+      //             id: "tips",
+      //             builder: (_)=>TextWidget(
+      //               text: "${UserInfoUtils.instance.userTipsNum}/3",
+      //               size: 17.sp,
+      //               color: "#002E63".toColor(),
+      //               fontWeight: FontWeight.w700,
+      //             ),
+      //           )
+      //         ],
+      //       )
+      //     ],
+      //   ),
+      // ),
       const Spacer(),
       Stack(
         alignment: Alignment.center,

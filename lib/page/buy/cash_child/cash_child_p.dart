@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:marquee/marquee.dart';
 
 class CashChildP extends BaseW<CashChildC>{
   @override
@@ -49,12 +50,29 @@ class CashChildP extends BaseW<CashChildC>{
     alignment: Alignment.center,
     children: [
       ImagesWidget(name: "cash1",height: 32.h,),
-      StrokedTextWidget(text: "1*****121  user just cashed out \$300",
-          fontSize: 13.sp,
-          textColor: Colors.white,
-          strokeColor: "#520004".toColor(),
-          strokeWidth: 1.w
+      SizedBox(
+        width: double.infinity,
+        height: 32.h,
+        child: Marquee(
+          text: con.marqueeStr,
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: Colors.white,
+          ),
+          scrollAxis: Axis.horizontal,
+          blankSpace: 20.0,
+          velocity: 100.0,
+          startPadding: 10.0,
+          accelerationCurve: Curves.linear,
+          decelerationCurve: Curves.easeOut,
+        ),
       )
+      // StrokedTextWidget(text: "1*****121  user just cashed out \$300",
+      //     fontSize: 13.sp,
+      //     textColor: Colors.white,
+      //     strokeColor: "#520004".toColor(),
+      //     strokeWidth: 1.w
+      // )
     ],
   );
   

@@ -142,9 +142,7 @@ class WordChildC extends BaseC{
               });
         }
       }else{
-        if(!GuideUtils.instance.getGuideStepComplete()){
-          checkShowFinger(ClickWordsTipsFrom.guide);
-        }
+        checkShowFinger(ClickWordsTipsFrom.guide);
       }
     }
     update(["words_list","choose_list"]);
@@ -239,9 +237,9 @@ class WordChildC extends BaseC{
   }
 
   _startTimerCount(){
-    if(!GuideUtils.instance.getGuideStepComplete()){
-      return;
-    }
+    // if(!GuideUtils.instance.getGuideStepComplete()){
+    //   return;
+    // }
     _timerCount?.cancel();
     answerTimeCount=20;
     update(["timer"]);
@@ -268,14 +266,17 @@ class WordChildC extends BaseC{
   }
 
   checkShowFinger(ClickWordsTipsFrom clickWordsTipsFrom){
-    if(UserInfoUtils.instance.userTipsNum<=0&&GuideUtils.instance.getGuideStepComplete()){
-      RoutersUtils.showDialog(
-          child: NoTipsD(
-            addTipsCall: (){
-              checkShowFinger(clickWordsTipsFrom);
-            },
-          )
-      );
+    // if(UserInfoUtils.instance.userTipsNum<=0&&GuideUtils.instance.getGuideStepComplete()){
+    //   RoutersUtils.showDialog(
+    //       child: NoTipsD(
+    //         addTipsCall: (){
+    //           checkShowFinger(clickWordsTipsFrom);
+    //         },
+    //       )
+    //   );
+    //   return;
+    // }
+    if(showFinger){
       return;
     }
     var tipsWords = _checkTipsWords();
@@ -338,7 +339,10 @@ class WordChildC extends BaseC{
   }
 
   clickBubble(index){
-    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.word_float_pop);
+    TbaUtils.instance.uploadAppPoint(
+      appPoint: AppPoint.word_float_pop,
+      params: {"pop_from":"other"},
+    );
     bubbleShowList[index]=false;
     update(["bubble"]);
     AdUtils.instance.showAd(
@@ -349,9 +353,6 @@ class WordChildC extends BaseC{
           _showBubble(index);
         },
         adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {
-
-            },
             showAdFail: (MaxAd? ad, MaxError? error) {
 
             },
@@ -363,9 +364,7 @@ class WordChildC extends BaseC{
                   closeDialog: (){}
               );
             },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-            })
+        )
     );
   }
 
@@ -414,12 +413,17 @@ class WordChildC extends BaseC{
     var box = bubbleGlobal.currentContext!.findRenderObject()! as RenderBox;
     var offset = box.localToGlobal(Offset.zero);
     if(null!=context){
+      TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.word_float_pop_guide);
       GuideUtils.instance.showOverlay(
           context: context!,
           widget: BubbleGuideOverlay(
               offset: offset,
               click: (){
                 GuideUtils.instance.hideOverlay();
+                TbaUtils.instance.uploadAppPoint(
+                  appPoint: AppPoint.word_float_pop,
+                  params: {"pop_from":fromUserGuide?"guide":"other"}
+                );
                 AdUtils.instance.showAd(
                     adType: AdType.reward,
                     adPosId: AdPosId.fw_new_bubble_rv,
@@ -428,7 +432,6 @@ class WordChildC extends BaseC{
                       _updateNewUserGuideStep(fromUserGuide);
                     },
                     adShowListener: AdShowListener(
-                        showAdSuccess: (MaxAd? ad) {  },
                         showAdFail: (MaxAd? ad, MaxError? error) {
                           _updateNewUserGuideStep(fromUserGuide);
                         },
@@ -436,7 +439,6 @@ class WordChildC extends BaseC{
                           UserInfoUtils.instance.updateUserCoinNum(ValueUtils.instance.getCurrentAddNum());
                           _updateNewUserGuideStep(fromUserGuide);
                         },
-                        onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {  }
                     )
                 );
               }

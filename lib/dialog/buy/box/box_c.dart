@@ -39,8 +39,6 @@ class BoxC extends BaseC{
       adPosId: AdPosId.fw_wordbox_rv,
       adFormat: AdFomat.REWARD,
       adShowListener: AdShowListener(
-          showAdSuccess: (MaxAd? ad) {
-          },
           showAdFail: (MaxAd? ad, MaxError? error) {
           },
           onAdHidden: (MaxAd? ad) {
@@ -49,9 +47,7 @@ class BoxC extends BaseC{
             RoutersUtils.off();
             dismissDialog.call();
           },
-          onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-          }),
+      ),
     );
   }
 }

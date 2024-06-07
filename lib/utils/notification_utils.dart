@@ -8,6 +8,7 @@ import 'package:findword/utils/sign_utils.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_max_ad/flutter_max_ad.dart';
 
 class NotificationsId{
   static const int regular=100;
@@ -126,12 +127,12 @@ class NotificationUtils{
   }
 
   _clickNotification(NotificationResponse response){
-    if(GuideUtils.instance.overlayShowing()){
+    if(FlutterMaxAd.instance.fullAdShowing()){
       return;
     }
     clickNotification=true;
     RoutersUtils.toPage(name: RoutersName.launch,map: {"NotificationId":response.id});
-    Future.delayed(const Duration(milliseconds: 3000),(){
+    Future.delayed(const Duration(milliseconds: 2000),(){
       clickNotification=false;
     });
   }

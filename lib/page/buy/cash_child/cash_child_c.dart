@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:findword/base/base_c.dart';
 import 'package:findword/dialog/buy/cash/cash_d.dart';
 import 'package:findword/dialog/buy/no_money_dialog/no_money_d.dart';
@@ -18,10 +20,16 @@ import 'package:findword/utils/value_utils.dart';
 import 'package:flutter/material.dart';
 
 class CashChildC extends BaseC{
-  var payTypeIndex=0,cashNumIndex=0;
+  var payTypeIndex=0,cashNumIndex=0,marqueeStr="";
   GlobalKey checkInGlobalKey=GlobalKey();
   List<int> cashNumList=ValueUtils.instance.getCashList();
   List<String> payTypeList=["pay_type1","pay_type2","pay_type3","pay_type4","pay_type5","pay_type6"];
+
+  @override
+  void onInit() {
+    super.onInit();
+    _initMarqueeStr();
+  }
 
   @override
   bool initEvent() => true;
@@ -134,4 +142,13 @@ class CashChildC extends BaseC{
       );
     }
   }
+
+  _initMarqueeStr(){
+    for(var index=0; index<5;index++){
+      var phone = "${Random().nextInt(9)}${Random().nextInt(9)}${Random().nextInt(9)}${Random().nextInt(9)}";
+      var cash = ValueUtils.instance.getCashList().random();
+      marqueeStr+="1*******$phone user just cashed out \$$cash     ";
+    }
+  }
+
 }

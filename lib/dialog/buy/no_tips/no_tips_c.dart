@@ -26,16 +26,13 @@ class NoTipsC extends BaseC{
         adPosId: AdPosId.fw_addtips_rv,
         adFormat: AdFomat.REWARD,
         adShowListener: AdShowListener(
-            showAdSuccess: (MaxAd? ad) {  },
             showAdFail: (MaxAd? ad, MaxError? error) {  },
             onAdHidden: (MaxAd? ad) {
               UserInfoUtils.instance.updateTipsNum(3);
               RoutersUtils.off();
               addTipsCall.call();
             },
-            onAdRevenuePaidCallback: (MaxAd ad, MaxAdInfoBean? maxAdInfoBean) {
-
-            })
+        )
     );
   }
 }
