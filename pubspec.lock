@@ -288,9 +288,10 @@ packages:
   flutter_max_ad:
     dependency: "direct main"
     description:
-      path: "/Users/c38/StudioProjects/flutter_max_ad"
-      relative: false
-    source: path
+      name: flutter_max_ad
+      sha256: "93eca2cdf2ab14f4dd2e64202aae3be647aefe6d20629a97387437ac4a61ea14"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.2.3"
   flutter_screenutil:
     dependency: "direct main"

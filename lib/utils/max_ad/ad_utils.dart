@@ -63,7 +63,9 @@ class AdUtils{
     Function()? cancelShow,
     int tryNum=1,
   }){
-    TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
+    if(tryNum>=1){
+      TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
+    }
     FlutterMaxAd.instance.loadAdByType(adType);
     var hasCache = FlutterMaxAd.instance.checkHasCache(adType);
     if(hasCache){

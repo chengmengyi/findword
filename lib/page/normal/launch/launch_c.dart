@@ -48,26 +48,35 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
 
   _checkAd(bool end)async{
     var userType = FlutterCheckAdjustCloak.instance.getUserType();
-    if(end&&!userType){
-      _timeEnd(userType);
+    if(end){
+      _stopTimer();
+      if(userType){
+        if(FlutterMaxAd.instance.checkHasCache(AdType.inter)){
+          AdUtils.instance.showOpenAd(
+              noCache: (){}
+          );
+        }else{
+          _timeEnd(userType);
+        }
+      }else{
+        _timeEnd(userType);
+      }
       return;
     }
-    // print("kk======${FlutterCheckAdjustCloak.instance.getUserType()}==${FlutterMaxAd.instance.checkHasCache(AdType.inter)}");
     if(userType&&FlutterMaxAd.instance.checkHasCache(AdType.inter)){
+      _stopTimer();
       _timeEnd(userType);
       AdUtils.instance.showOpenAd(
-        noCache: (){}
+          noCache: (){}
       );
     }
   }
 
   _timeEnd(bool userType){
-    _stopTimer();
     if(userType&&buyHomeShowing){
       RoutersUtils.off();
       return;
     }
-
     RoutersUtils.offAllNamed(name: userType?RoutersName.buyHome:RoutersName.home);
   }
 

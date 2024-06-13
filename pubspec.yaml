@@ -42,9 +42,9 @@ dependencies:
   lottie: 2.6.0
   google_mobile_ads: 4.0.0
   flutter_check_adjust_cloak: 0.1.9
-#  flutter_max_ad: 0.2.2
-  flutter_max_ad:
-    path: /Users/c38/StudioProjects/flutter_max_ad
+  flutter_max_ad: 0.2.3
+#  flutter_max_ad:
+#    path: /Users/c38/StudioProjects/flutter_max_ad
   in_app_review: 2.0.9
   connectivity_plus: 6.0.3
   flutter_app_lifecycle: 0.0.1
