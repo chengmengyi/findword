@@ -67,10 +67,7 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
       RoutersUtils.off();
       return;
     }
-    if(kDebugMode){
-      RoutersUtils.offAllNamed(name: RoutersName.buyHome);
-      return;
-    }
+
     RoutersUtils.offAllNamed(name: userType?RoutersName.buyHome:RoutersName.home);
   }
 
