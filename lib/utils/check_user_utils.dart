@@ -46,7 +46,7 @@ class CheckUserUtils implements CheckListener{
       unknownFirebaseKey: "",
       referrerConfKey: "",
       adjustConfKey: "find_adjust_on",
-      checkListener: this
+      checkListener: this,
     );
   }
 

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:findword/base/base_c.dart';
 import 'package:findword/utils/max_ad/ad_pos_id.dart';
 import 'package:findword/utils/max_ad/ad_utils.dart';
@@ -7,7 +6,6 @@ import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/value_utils.dart';
-import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
 import 'package:flutter_max_ad/ad/ad_type.dart';
 import 'package:flutter_max_ad/ad/listener/ad_show_listener.dart';
 import 'package:flutter_max_ad/export.dart';
@@ -16,7 +14,7 @@ import 'package:flutter_max_ad/flutter_max_ad.dart';
 class UpLevelC extends BaseC{
   Timer? _timer;
   var countDownTime="";
-  var addNum=ValueUtils.instance.getCurrentAddNum();
+  var addNum=ValueUtils.instance.getLevelAddNum();
 
   @override
   void onInit() {

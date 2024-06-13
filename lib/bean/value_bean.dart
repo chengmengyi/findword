@@ -1,9 +1,12 @@
 class ValueBean {
   ValueBean({
-      this.range, 
-      this.conversion, 
-      this.rewardLucky, 
-      this.wheel,});
+    this.range,
+    this.conversion,
+    this.rewardLucky,
+    this.wheel,
+    this.floatReward,
+    this.levelReward,
+  });
 
   ValueBean.fromJson(dynamic json) {
     range = json['range'] != null ? json['range'].cast<int>() : [];
@@ -20,12 +23,26 @@ class ValueBean {
         wheel?.add(RewardLucky.fromJson(v));
       });
     }
+    if (json['float_reward'] != null) {
+      floatReward = [];
+      json['float_reward'].forEach((v) {
+        floatReward?.add(RewardLucky.fromJson(v));
+      });
+    }
+    if (json['level_reward'] != null) {
+      levelReward = [];
+      json['level_reward'].forEach((v) {
+        levelReward?.add(RewardLucky.fromJson(v));
+      });
+    }
   }
   List<int>? range;
   int? conversion;
   List<RewardLucky>? rewardLucky;
   List<RewardLucky>? wheel;
-  
+  List<RewardLucky>? floatReward;
+  List<RewardLucky>? levelReward;
+
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['range'] = range;
@@ -35,6 +52,12 @@ class ValueBean {
     }
     if (wheel != null) {
       map['wheel'] = wheel?.map((v) => v.toJson()).toList();
+    }
+    if (floatReward != null) {
+      map['float_reward'] = floatReward?.map((v) => v.toJson()).toList();
+    }
+    if (levelReward != null) {
+      map['level_reward'] = levelReward?.map((v) => v.toJson()).toList();
     }
     return map;
   }

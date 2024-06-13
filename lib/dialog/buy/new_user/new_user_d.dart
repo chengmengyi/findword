@@ -11,6 +11,7 @@ import 'package:findword/widget/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 class NewUserD extends BaseD<NewUserC>{
   @override
@@ -31,9 +32,9 @@ class NewUserD extends BaseD<NewUserC>{
           Container(
             margin: EdgeInsets.only(left: 16.w,right: 16.w),
             child: ImagesWidget(
-              name: "dialog_bg",
+              name: "dialog_bg2",
               width: double.infinity,
-              height: 576.h,
+              height: 532.h,
               fit: BoxFit.fill,
             ),
           ),
@@ -42,17 +43,20 @@ class NewUserD extends BaseD<NewUserC>{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 12.h,),
                 _topWidget(),
-                SizedBox(height: 30.h,),
+                SizedBox(height: 10.h,),
                 _payListWidget(),
                 SizedBox(height: 20.h,),
-                BtnWidget(
-                    text: "Claim Double",
-                    clickCall: (){
-                      con.clickClaim();
-                    }
-                )
+                InkWell(
+                  onTap: (){
+                    con.clickClaim();
+                  },
+                  child: Lottie.asset(
+                    "asset/button.zip",
+                    width: 300.w,
+                    height: 80.w,
+                  ),
+                ),
               ],
             ),
           )
@@ -64,39 +68,30 @@ class NewUserD extends BaseD<NewUserC>{
   _topWidget()=>Column(
     mainAxisSize: MainAxisSize.min,
     children: [
-      TextWidget(
-        text: "Newbie Rewards",
-        size: 28.sp,
-        color: Colors.white,
-        fontWeight: FontWeight.w600,
-      ),
-      SizedBox(height: 44.h,),
+      SizedBox(height: 10.h,),
+      ImagesWidget(name: "new_user1",height: 83.h,),
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           ImagesWidget(name: "new1",width: 24.w,height: 24.h,),
-          TextWidget(text: "pending withdrawal amount", size: 17.sp, color: Colors.white,fontWeight: FontWeight.w700,)
+          SizedBox(width: 5.w,),
+          StrokedTextWidget(
+            text: "Pending Withdrawal Amount",
+            fontSize: 17.sp,
+            textColor: Colors.white,
+            strokeColor: "#8B3B01".toColor(),
+            strokeWidth: 2.w,
+          )
         ],
       ),
       SizedBox(height: 30.h,),
-      Stack(
-        alignment: Alignment.center,
-        children: [
-          ImagesWidget(name: "new2",width: double.infinity,height: 186.h,fit: BoxFit.fill,),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              LightWidget(),
-              StrokedTextWidget(
-                  text: "\$${ValueUtils.instance.getCoinToMoney(con.addNum)}",
-                  fontSize: 28.sp,
-                  textColor: "#D5FF65".toColor(),
-                  strokeColor: "#002E63".toColor(),
-                  strokeWidth: 1.w
-              )
-            ],
-          )
-        ],
+      ImagesWidget(name: "new_user2",width: double.infinity,height: 120.h,),
+      StrokedTextWidget(
+          text: "\$${ValueUtils.instance.getCoinToMoney(con.addNum)}",
+          fontSize: 28.sp,
+          textColor: "#3DFF39".toColor(),
+          strokeColor: "#053400".toColor(),
+          strokeWidth: 1.w
       )
     ],
   );
@@ -105,7 +100,7 @@ class NewUserD extends BaseD<NewUserC>{
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      TextWidget(text: "You can withdraw money to", size: 17.sp, color: Colors.white,fontWeight: FontWeight.w700,),
+      TextWidget(text: "You can withdraw money to", size: 17.sp, color: "#8C3B00".toColor(),fontWeight: FontWeight.w700,),
       SizedBox(height: 6.h,),
       SizedBox(
         width: double.infinity,
@@ -123,17 +118,13 @@ class NewUserD extends BaseD<NewUserC>{
                 },
                 child: Stack(
                   children: [
+                    ImagesWidget(
+                      name: index==con.payIndex?"new_user3":"new_user4",
+                      width: 140.w,
+                      height: 56.h,
+                      fit: BoxFit.fill,
+                    ),
                     ImagesWidget(name: con.payList[index],width: 140.w,height: 56.h,fit: BoxFit.fill,),
-                    Offstage(
-                      offstage: index==con.payIndex,
-                      child: ImagesWidget(
-                        name: "new3",
-                        width: 140.w,
-                        height: 56.h,
-                        fit: BoxFit.fill,
-                        color: Colors.white.withOpacity(0.5),
-                      ),
-                    )
                   ],
                 ),
               ),

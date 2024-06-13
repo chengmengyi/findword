@@ -51,7 +51,6 @@ class WordChildC extends BaseC{
   bool showFinger=false;
   double fingerTop=0.0,fingerLeft=0.0;
   WordsCharBean? tipsWordsCharBean;
-  GlobalKey bubbleGlobal=GlobalKey();
   List<bool> bubbleShowList=[true,true,true];
   ClickWordsTipsFrom _clickWordsTipsFrom=ClickWordsTipsFrom.other;
 
@@ -142,7 +141,9 @@ class WordChildC extends BaseC{
               });
         }
       }else{
-        checkShowFinger(ClickWordsTipsFrom.guide);
+        if(!GuideUtils.instance.getGuideStepComplete()){
+          checkShowFinger(ClickWordsTipsFrom.guide);
+        }
       }
     }
     update(["words_list","choose_list"]);
@@ -248,9 +249,7 @@ class WordChildC extends BaseC{
       update(["timer"]);
       if(answerTimeCount<=0){
         timer.cancel();
-        if(!loadAdDialogShowing){
-          checkShowFinger(ClickWordsTipsFrom.hint);
-        }
+        checkShowFinger(ClickWordsTipsFrom.hint);
       }
     });
   }
@@ -266,16 +265,6 @@ class WordChildC extends BaseC{
   }
 
   checkShowFinger(ClickWordsTipsFrom clickWordsTipsFrom){
-    // if(UserInfoUtils.instance.userTipsNum<=0&&GuideUtils.instance.getGuideStepComplete()){
-    //   RoutersUtils.showDialog(
-    //       child: NoTipsD(
-    //         addTipsCall: (){
-    //           checkShowFinger(clickWordsTipsFrom);
-    //         },
-    //       )
-    //   );
-    //   return;
-    // }
     if(showFinger){
       return;
     }
@@ -338,43 +327,6 @@ class WordChildC extends BaseC{
     }
   }
 
-  clickBubble(index){
-    TbaUtils.instance.uploadAppPoint(
-      appPoint: AppPoint.word_float_pop,
-      params: {"pop_from":"other"},
-    );
-    bubbleShowList[index]=false;
-    update(["bubble"]);
-    AdUtils.instance.showAd(
-        adType: AdType.reward,
-        adPosId: AdPosId.fw_old_bubble_rv,
-        adFormat: AdFomat.REWARD,
-        cancelShow: (){
-          _showBubble(index);
-        },
-        adShowListener: AdShowListener(
-            showAdFail: (MaxAd? ad, MaxError? error) {
-
-            },
-            onAdHidden: (MaxAd? ad) {
-              UserInfoUtils.instance.updateBubbleNum(1);
-              _showBubble(index);
-              showIncentDialog(
-                  incentFrom: IncentFrom.bubble,
-                  closeDialog: (){}
-              );
-            },
-        )
-    );
-  }
-
-  _showBubble(index){
-    Future.delayed(Duration(seconds: FirebaseDataUtils.instance.bubbleTime),(){
-      bubbleShowList[index]=true;
-      update(["bubble"]);
-    });
-  }
-
   @override
   bool initEvent() => true;
 
@@ -398,11 +350,11 @@ class WordChildC extends BaseC{
         _showAnswerTipsFrom=ShowAnswerTipsFrom.oldUserGuide;
         checkShowFinger(ClickWordsTipsFrom.guide);
         break;
-      case EventName.updateHomeIndex:
-        if(eventBean.intValue==0&&eventBean.boolValue==true){
-          _showWordBubbleGuide(false);
-        }
-        break;
+      // case EventName.updateHomeIndex:
+      //   if(eventBean.intValue==0&&eventBean.boolValue==true){
+      //     _showWordBubbleGuide(false);
+      //   }
+      //   break;
       default:
 
         break;
@@ -410,41 +362,36 @@ class WordChildC extends BaseC{
   }
 
   _showWordBubbleGuide(bool fromUserGuide){
-    var box = bubbleGlobal.currentContext!.findRenderObject()! as RenderBox;
-    var offset = box.localToGlobal(Offset.zero);
-    if(null!=context){
-      TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.word_float_pop_guide);
-      GuideUtils.instance.showOverlay(
-          context: context!,
-          widget: BubbleGuideOverlay(
-              offset: offset,
-              click: (){
-                GuideUtils.instance.hideOverlay();
-                TbaUtils.instance.uploadAppPoint(
-                  appPoint: AppPoint.word_float_pop,
-                  params: {"pop_from":fromUserGuide?"guide":"other"}
-                );
-                AdUtils.instance.showAd(
-                    adType: AdType.reward,
-                    adPosId: AdPosId.fw_new_bubble_rv,
-                    adFormat: AdFomat.REWARD,
-                    cancelShow: (){
-                      _updateNewUserGuideStep(fromUserGuide);
-                    },
-                    adShowListener: AdShowListener(
-                        showAdFail: (MaxAd? ad, MaxError? error) {
-                          _updateNewUserGuideStep(fromUserGuide);
-                        },
-                        onAdHidden: (MaxAd? ad) {
-                          UserInfoUtils.instance.updateUserCoinNum(ValueUtils.instance.getCurrentAddNum());
-                          _updateNewUserGuideStep(fromUserGuide);
-                        },
-                    )
-                );
-              }
-          ),
-      );
-    }
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.word_float_pop_guide);
+    GuideUtils.instance.showOverlay(
+      context: context!,
+      widget: BubbleGuideOverlay(
+          click: (){
+            GuideUtils.instance.hideOverlay();
+            TbaUtils.instance.uploadAppPoint(
+                appPoint: AppPoint.word_float_pop,
+                params: {"pop_from":fromUserGuide?"guide":"other"}
+            );
+            AdUtils.instance.showAd(
+                adType: AdType.reward,
+                adPosId: AdPosId.fw_new_bubble_rv,
+                adFormat: AdFomat.REWARD,
+                cancelShow: (){
+                  _updateNewUserGuideStep(fromUserGuide);
+                },
+                adShowListener: AdShowListener(
+                  showAdFail: (MaxAd? ad, MaxError? error) {
+                    _updateNewUserGuideStep(fromUserGuide);
+                  },
+                  onAdHidden: (MaxAd? ad) {
+                    UserInfoUtils.instance.updateUserCoinNum(ValueUtils.instance.getFloatAddNum());
+                    _updateNewUserGuideStep(fromUserGuide);
+                  },
+                )
+            );
+          }
+      ),
+    );
   }
 
   _updateNewUserGuideStep(bool fromUserGuide){

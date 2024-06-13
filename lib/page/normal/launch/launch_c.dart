@@ -8,13 +8,10 @@ import 'package:findword/utils/notification_utils.dart';
 import 'package:findword/utils/routers/routers_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
-import 'package:findword/utils/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_check_adjust_cloak/flutter_check_adjust_cloak.dart';
-import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
 import 'package:flutter_max_ad/ad/ad_type.dart';
-import 'package:flutter_max_ad/ad/listener/ad_show_listener.dart';
-import 'package:flutter_max_ad/export.dart';
 import 'package:flutter_max_ad/flutter_max_ad.dart';
 
 class LaunchC extends BaseC with WidgetsBindingObserver{
@@ -26,7 +23,7 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
     super.onInit();
     launchPageShowing=true;
     WidgetsBinding.instance.addObserver(this);
-    FlutterMaxAd.instance.loadAdByType(AdType.open);
+    FlutterMaxAd.instance.loadAdByType(AdType.inter);
     TbaUtils.instance.uploadSessionEvent();
     _receiveNotification();
     Future((){
@@ -43,7 +40,7 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
         _checkAd(false);
         if(_count>=_totalCount){
           FlutterCheckAdjustCloak.instance.checkType();
-          _timeEnd(true);
+          _checkAd(true);
         }
       }
     });
@@ -55,7 +52,8 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
       _timeEnd(userType);
       return;
     }
-    if(userType&&FlutterMaxAd.instance.checkHasCache(AdType.open)){
+    // print("kk======${FlutterCheckAdjustCloak.instance.getUserType()}==${FlutterMaxAd.instance.checkHasCache(AdType.inter)}");
+    if(userType&&FlutterMaxAd.instance.checkHasCache(AdType.inter)){
       _timeEnd(userType);
       AdUtils.instance.showOpenAd(
         noCache: (){}
@@ -67,6 +65,10 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
     _stopTimer();
     if(userType&&buyHomeShowing){
       RoutersUtils.off();
+      return;
+    }
+    if(kDebugMode){
+      RoutersUtils.offAllNamed(name: RoutersName.buyHome);
       return;
     }
     RoutersUtils.offAllNamed(name: userType?RoutersName.buyHome:RoutersName.home);

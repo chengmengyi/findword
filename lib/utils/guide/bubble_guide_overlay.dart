@@ -6,9 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 class BubbleGuideOverlay extends StatelessWidget{
-  Offset offset;
   Function() click;
-  BubbleGuideOverlay({required this.offset,required this.click});
+  BubbleGuideOverlay({required this.click});
 
   @override
   Widget build(BuildContext context) => Material(
@@ -21,8 +20,8 @@ class BubbleGuideOverlay extends StatelessWidget{
         child: Stack(
           children: [
             Positioned(
-              top: offset.dy,
-              right: ScreenUtil().screenWidth-offset.dx-64.w,
+              right: 30.w,
+              top: 100.h,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -45,15 +44,15 @@ class BubbleGuideOverlay extends StatelessWidget{
                     },
                     child: ImagesWidget(
                       name: "bubble",
-                      width: 64.w,
-                      height: 64.h,
+                      width: 100.w,
+                      height: 100.h,
                     ),
                   )
                 ],
               ),
             ),
             Positioned(
-              top: offset.dy,
+              top: 100.h,
               right: 0,
               child: InkWell(
                 onTap: (){
@@ -61,8 +60,8 @@ class BubbleGuideOverlay extends StatelessWidget{
                 },
                 child: Lottie.asset(
                   "asset/figer.zip",
-                  width: 100.w,
-                  height: 100.h,
+                  width: 120.w,
+                  height: 120.h,
                 ),
               ),
             ),

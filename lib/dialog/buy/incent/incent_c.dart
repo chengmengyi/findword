@@ -27,6 +27,10 @@ class IncentC extends BaseC{
     if(incentFrom==IncentFrom.wheel){
       addNum=ValueUtils.instance.getWheelAddNum();
     }
+    var add = RoutersUtils.getParams()["addNum"];
+    if(add!=0){
+      addNum=add;
+    }
     FlutterMaxAd.instance.loadAdByType(AdType.reward);
     TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_double_pop,params: _getAppPointParams());
   }

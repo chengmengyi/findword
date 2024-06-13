@@ -17,7 +17,7 @@ import 'package:flutter_max_ad/flutter_max_ad.dart';
 class NewUserC extends BaseC{
   var payIndex=0;
   int addNum=ValueUtils.instance.getCurrentAddNum();
-  List<String> payList=["pay_p","pay_g","pay_a","pay_w","pay_m","pay_c"];
+  List<String> payList=["new_user_pay1","new_user_pay2","new_user_pay3","new_user_pay4","new_user_pay5","new_user_pay6"];
 
   @override
   void onInit() {

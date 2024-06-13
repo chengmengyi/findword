@@ -80,43 +80,38 @@ class UpLevelD extends BaseD<UpLevelC>{
         margin: EdgeInsets.only(left: 16.w,right: 16.w),
         child: ImagesWidget(name: "level1",width: double.infinity,height: 48.h,fit: BoxFit.fill,),
       ),
-      StrokedTextWidget(
-          text: "Level ${UserInfoUtils.instance.userLevel+1}",
-          fontSize: 50.sp,
-          textColor: Colors.white,
-          strokeColor: "#C35E00".toColor(),
-          strokeWidth: 1.w
-      ),
+      ImagesWidget(name: "icon_level${UserInfoUtils.instance.userLevel+1}",height: 40.h,)
     ],
   );
 
   _moneyWidget()=>SizedBox(
-    width: 260.w,
-    height: 260.w,
+    width: 314.w,
+    height: 314.w,
     child: Stack(
       children: [
-        Lottie.asset("asset/light.zip",width: 260.w,height: 260.w,fit: BoxFit.fill),
+        Lottie.asset("asset/money_new.zip",width: 314.w,height: 314.w,fit: BoxFit.fill),
         Align(
           alignment: Alignment.topCenter,
           child: Container(
             margin: EdgeInsets.only(top: 16.w),
-            child: TextWidget(text: "Congratulations on reaching level ${UserInfoUtils.instance.userLevel+1}", size: 13.sp, color: Colors.white),
+            child: TextWidget(text: "Congratulations on reaching level ${UserInfoUtils.instance.userLevel+1}", size: 13.sp, color: Colors.white,fontWeight: FontWeight.w800,),
           ),
         ),
-        Align(
-          alignment: Alignment.center,
-          child: ImagesWidget(name: "icon_money2",width: 100.w,height: 100.w,),
-        ),
+        // Align(
+        //   alignment: Alignment.center,
+        //   child: ImagesWidget(name: "icon_money2",width: 100.w,height: 100.w,),
+        // ),
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
             margin: EdgeInsets.only(bottom: 22.w),
             child: StrokedTextWidget(
-                text: "+${con.addNum} ≈ \$${ValueUtils.instance.getCoinToMoney(con.addNum)}",
-                fontSize: 28.sp,
-                textColor: "#D5FF65".toColor(),
-                strokeColor: "#116508".toColor(),
-                strokeWidth: 1.w
+              text: "+${con.addNum} ≈ \$${ValueUtils.instance.getCoinToMoney(con.addNum)}",
+              fontSize: 28.sp,
+              textColor: "#D5FF65".toColor(),
+              strokeColor: "#116508".toColor(),
+              strokeWidth: 2.w,
+              fontWeight: FontWeight.w800,
             ),
           ),
         )
@@ -150,18 +145,25 @@ class UpLevelD extends BaseD<UpLevelC>{
             ),
           ),
           StrokedTextWidget(
-              text: "${UserInfoUtils.instance.userLevel%5+1}/5 level",
-              fontSize: 13.sp,
-              textColor: Colors.white,
-              strokeColor: "#520004".toColor(),
-              strokeWidth: 1.w
+            text: "${UserInfoUtils.instance.userLevel%5+1}/5 level",
+            fontSize: 13.sp,
+            textColor: Colors.white,
+            strokeColor: "#520004".toColor(),
+            strokeWidth: 1.w,
+            fontWeight: FontWeight.w800,
           ),
         ],
       ),
       Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          ImagesWidget(name: "sign5",width: 48.w,height: 48.w,),
+          // ImagesWidget(name: "sign5",width: 48.w,height: 48.w,),
+          Lottie.asset(
+              "asset/gift_icon.zip",
+              width: 48.w,
+              height: 48.w,
+              fit: BoxFit.fill
+          ),
           GetBuilder<UpLevelC>(
             id: "time",
             builder: (_)=>StrokedTextWidget(
@@ -180,19 +182,27 @@ class UpLevelD extends BaseD<UpLevelC>{
   _btnWidget()=>Column(
     mainAxisSize: MainAxisSize.min,
     children: [
-      BtnWidget(
-          text: "Claim Double",
-          clickCall: (){
-            con.clickDouble(closeDialog);
-          }),
+      InkWell(
+        onTap: (){
+          con.clickDouble(closeDialog);
+        },
+        child: Lottie.asset(
+          "asset/button.zip",
+          width: 300.w,
+          height: 80.w,
+        ),
+      ),
       SizedBox(height: 10.h,),
-      BtnWidget(
-        text: "Level ${UserInfoUtils.instance.userLevel+1}",
-        clickCall: (){
+      InkWell(
+        onTap: (){
           con.clickClose(closeDialog,close: true);
         },
-        bg: "btn",
-      ),
+        child: TextWidget(
+          text: "Level ${UserInfoUtils.instance.userLevel+1}",
+          size: 20.sp,
+          color: Colors.white,
+        ),
+      )
     ],
   );
 }

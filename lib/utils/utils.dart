@@ -131,6 +131,14 @@ String second2HMS(int sec, {bool isEasy = true}) {
   return hms;
 }
 
-showIncentDialog({required IncentFrom incentFrom,required Function() closeDialog,}){
-  RoutersUtils.showDialog(child: IncentD(closeDialog: closeDialog),arguments: {"incentFrom":incentFrom});
+showIncentDialog({required IncentFrom incentFrom,required Function() closeDialog,int addNum=0}){
+  RoutersUtils.showDialog(
+    child: IncentD(
+        closeDialog: closeDialog
+    ),
+    arguments: {
+      "incentFrom": incentFrom,
+      "addNum": addNum
+    },
+  );
 }

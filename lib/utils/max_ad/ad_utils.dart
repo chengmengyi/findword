@@ -34,12 +34,10 @@ class AdUtils{
     var maxAdBean = MaxAdBean(
       maxShowNum: json["fha"],
       maxClickNum: json["fag"],
-      firstOpenAdList: _getAdList(json["fw_open_3"],"fw_open_3"),
-      secondOpenAdList: _getAdList(json["fw_open_2"],"fw_open_2"),
       firstRewardedAdList: _getAdList(json["fw_rv_3"],"fw_rv_3"),
       secondRewardedAdList: _getAdList(json["fw_rv_2"],"fw_rv_2"),
-      firstInterAdList: _getAdList(json["fw_int_3"],"fw_int_3"),
-      secondInterAdList: _getAdList(json["fw_int_2"],"fw_int_2"),
+      firstInterAdList: _getAdList(json["fw_open_3"],"fw_open_3"),
+      secondInterAdList: _getAdList(json["fw_open_2"],"fw_open_2"),
     );
     FlutterMaxAd.instance.initMax(
       maxKey: maxAdKey.base64(),
@@ -67,7 +65,6 @@ class AdUtils{
   }){
     TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
     FlutterMaxAd.instance.loadAdByType(adType);
-    loadAdDialogShowing=true;
     var hasCache = FlutterMaxAd.instance.checkHasCache(adType);
     if(hasCache){
       FlutterMaxAd.instance.showAd(
@@ -78,11 +75,9 @@ class AdUtils{
                 adShowListener.showAdSuccess?.call(ad,maxAdInfoBean);
               },
               showAdFail: (MaxAd? ad, MaxError? error) {
-                loadAdDialogShowing=false;
                 adShowListener.showAdFail?.call(ad,error);
               },
               onAdHidden: (MaxAd? ad) {
-                loadAdDialogShowing=false;
                 adShowListener.onAdHidden(ad);
               },
               onAdRevenuePaidCallback: (MaxAd ad) {
@@ -105,7 +100,6 @@ class AdUtils{
               );
             },
             closeCall: (){
-              loadAdDialogShowing=false;
               cancelShow?.call();
             },
           )
@@ -117,14 +111,14 @@ class AdUtils{
   }
 
   showOpenAd({required Function() noCache}){
-    var hasCache = FlutterMaxAd.instance.checkHasCache(AdType.open);
+    var hasCache = FlutterMaxAd.instance.checkHasCache(AdType.inter);
     if(!hasCache){
       noCache.call();
       return;
     }
     TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
     FlutterMaxAd.instance.showAd(
-      adType: AdType.open,
+      adType: AdType.inter,
       adShowListener: AdShowListener(
         showAdSuccess: (ad, MaxAdInfoBean? maxAdInfoBean){
           TbaUtils.instance.uploadAdEvent(ad: ad, info: maxAdInfoBean, adPosId: AdPosId.fw_open, adFormat: AdFomat.INT);
@@ -133,7 +127,7 @@ class AdUtils{
 
         },
         showAdFail: (ad,error){
-          FlutterMaxAd.instance.loadAdByType(AdType.open);
+          FlutterMaxAd.instance.loadAdByType(AdType.inter);
         },
       )
     );
@@ -185,7 +179,7 @@ class AdUtils{
             MaxAdInfoBean(
                 id: v["gro"],
                 plat: v["orm"],
-                adType: v2=="open"?AdType.open:v2=="interstitial"?AdType.inter:v2=="native"?AdType.native:AdType.reward,
+                adType: v2=="interstitial"?AdType.inter:v2=="native"?AdType.native:AdType.reward,
                 expire: v["mtj"],
                 sort: v["pqn"],
                 adLocationName: adLocationName

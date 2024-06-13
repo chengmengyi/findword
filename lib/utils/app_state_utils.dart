@@ -41,9 +41,7 @@ class AppStateUtils{
         _openLaunchPage=false;
         return;
       }
-      if(FlutterMaxAd.instance.fullAdShowing()){
-        FlutterMaxAd.instance.dismissMaxAdView();
-      }
+      FlutterMaxAd.instance.dismissMaxAdView();
       _openLaunchPage=true;
     });
   }
