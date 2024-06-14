@@ -37,11 +37,10 @@ class AppStateUtils{
 
   _checkBgTimer(){
     _bgTimer=Timer(const Duration(milliseconds: 3000), () {
-      if(clickNotification){
+      if(clickNotification||FlutterMaxAd.instance.fullAdShowing()){
         _openLaunchPage=false;
         return;
       }
-      FlutterMaxAd.instance.dismissMaxAdView();
       _openLaunchPage=true;
     });
   }
@@ -49,7 +48,7 @@ class AppStateUtils{
   _checkOpenLaunchPage(){
     _bgTimer?.cancel();
     Future.delayed(const Duration(milliseconds: 100),(){
-      if(clickNotification){
+      if(clickNotification||FlutterMaxAd.instance.fullAdShowing()){
         _openLaunchPage=false;
         return;
       }
