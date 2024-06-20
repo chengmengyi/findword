@@ -27,52 +27,55 @@ class GuideUtils {
 
   OverlayEntry? _overlayEntry;
 
+  var showBox=false,showBubble=false;
+
+  initInfo(){
+    if(_getLocalNewUserStep()==NewUserGuideStep.completed.name){
+      showBox=true;
+      showBubble=true;
+    }
+  }
+
   newUserGuide(){
-    var step = StorageUtils.instance.getValue<String>(StorageKey.newUserGuide)??NewUserGuideStep.newUserDialog.name;
-    if(step==NewUserGuideStep.newUserDialog.name){
-      RoutersUtils.showDialog(child: NewUserD());
-    }else if(step==NewUserGuideStep.checkInGuide.name){
-      EventBean(eventName: EventName.showCheckInGuide).sendEvent();
-    }else if(step==NewUserGuideStep.signDialog.name){
-      RoutersUtils.showDialog(child: SignD(),arguments: {"signFrom":SignFrom.newUser});
-    }else if(step==NewUserGuideStep.wordBubbleGuide.name){
-      EventBean(eventName: EventName.showWordBubbleGuide).sendEvent();
-    }else if(step==NewUserGuideStep.answerTips.name){
-      EventBean(eventName: EventName.showAnswerTips).sendEvent();
+    var step = _getLocalNewUserStep();
+    if(step==NewUserGuideStep.showFingerGuide.name){
+      EventBean(eventName: EventName.showNewUserFingerGuide).sendEvent();
+    }else if(step==NewUserGuideStep.showBox.name){
+      showBox=true;
+      EventBean(eventName: EventName.showBox,boolValue: true).sendEvent();
+    }else if(step==NewUserGuideStep.showBubbleGuide.name){
+      EventBean(eventName: EventName.showBubbleGuide).sendEvent();
     }else{
-      _checkOldUserGuideStep();
+      var newUserGuideTime=StorageUtils.instance.getValue<String>(StorageKey.newUserGuideTime)??"";
+      if(newUserGuideTime!=getTodayTimer()){
+        var oldUserGuideStep = _getTodayOldUserGuideStep();
+        if(oldUserGuideStep==OldUserGuideStep.showBoxGuide.name){
+          EventBean(eventName: EventName.showBox,boolValue: false).sendEvent();
+        }
+      }
     }
   }
 
-  _checkOldUserGuideStep(){
-    var oldUserStep=_getTodayOldUserGuideStep();
-    if(oldUserStep==OldUserGuideStep.completeOldUserGuide.name){
-      return;
+  updateNewUserGuideStep(NewUserGuideStep step){
+    StorageUtils.instance.writeValue(StorageKey.newUserGuideStep, step.name);
+    if(step==NewUserGuideStep.completed){
+      StorageUtils.instance.writeValue(StorageKey.newUserGuideTime, getTodayTimer());
     }
-    var isOldUser = StorageUtils.instance.getValue<String>(StorageKey.newUserGuideTimeStr)!=getTodayTimer();
-    if(!isOldUser){
-      return;
-    }
-    if(oldUserStep==OldUserGuideStep.signDialog.name){
-      RoutersUtils.showDialog(child: SignD(),arguments: {"signFrom":SignFrom.oldUser});
-    }else if(oldUserStep==OldUserGuideStep.incentDialog.name){
-      showIncentDialog(incentFrom: IncentFrom.oldUserGuide, closeDialog: (){});
-    }else if(oldUserStep==OldUserGuideStep.answerTips.name){
-      EventBean(eventName: EventName.showOldUserAnswerTips).sendEvent();
-    }
+    newUserGuide();
   }
 
-  bool getGuideStepComplete(){
-    var newUserGuideComplete = StorageUtils.instance.getValue<String>(StorageKey.newUserGuide)==NewUserGuideStep.completeNewUserStep.name;
-    var oldUserGuideComplete = _getTodayOldUserGuideStep()==OldUserGuideStep.completeOldUserGuide.name;
-    var todayCompleteNewUserGuide = StorageUtils.instance.getValue<String>(StorageKey.newUserGuideTimeStr)==getTodayTimer();
-    return (newUserGuideComplete&&todayCompleteNewUserGuide)||oldUserGuideComplete;
+  updateOldUserGuideStep(OldUserGuideStep step){
+    StorageUtils.instance.writeValue(StorageKey.oldUserGuideStep, "${getTodayTimer()}_${step.name}");
   }
+
+  bool checkNewUserCompleteStepOne()=>_getLocalNewUserStep()!=NewUserGuideStep.showFingerGuide.name;
+
+  String _getLocalNewUserStep()=>StorageUtils.instance.getValue<String>(StorageKey.newUserGuideStep)??NewUserGuideStep.showFingerGuide.name;
 
   String _getTodayOldUserGuideStep(){
-    //2022-02-02_signDialog
-    var oldUserGuideStr = StorageUtils.instance.getValue<String>(StorageKey.oldUserGuide)??"";
-    var oldUserStep=OldUserGuideStep.signDialog.name;
+    //2022-02-02_showBoxGuide
+    var oldUserGuideStr = StorageUtils.instance.getValue<String>(StorageKey.oldUserGuideStep)??"";
+    var oldUserStep=OldUserGuideStep.showBoxGuide.name;
     if(oldUserGuideStr.isNotEmpty){
       var split = oldUserGuideStr.split("_");
       if(getTodayTimer()==split.first){
@@ -80,19 +83,6 @@ class GuideUtils {
       }
     }
     return oldUserStep;
-  }
-
-  updateNewUserGuide(NewUserGuideStep step){
-    StorageUtils.instance.writeValue(StorageKey.newUserGuide, step.name);
-    if(step==NewUserGuideStep.completeNewUserStep){
-      StorageUtils.instance.writeValue(StorageKey.newUserGuideTimeStr, getTodayTimer());
-    }
-    newUserGuide();
-  }
-
-  updateOldUserGuide(OldUserGuideStep step){
-    StorageUtils.instance.writeValue(StorageKey.oldUserGuide, "${getTodayTimer()}_${step.name}");
-    _checkOldUserGuideStep();
   }
 
   showOverlay({required BuildContext context,required Widget widget}){

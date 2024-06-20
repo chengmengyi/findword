@@ -57,6 +57,6 @@ class NewUserC extends BaseC{
   _closeDialog(int addNum){
     RoutersUtils.off();
     UserInfoUtils.instance.updateUserCoinNum(addNum);
-    GuideUtils.instance.updateNewUserGuide(NewUserGuideStep.checkInGuide);
+    // GuideUtils.instance.updateNewUserGuide(NewUserGuideStep.checkInGuide);
   }
 }

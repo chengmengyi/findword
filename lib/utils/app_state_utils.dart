@@ -54,11 +54,7 @@ class AppStateUtils{
       }
       if(_openLaunchPage){
         TbaUtils.instance.uploadSessionEvent();
-        AdUtils.instance.showOpenAd(
-            noCache: (){
-              RoutersUtils.toPage(name: RoutersName.launch,map: {"fromHome":true});
-            }
-        );
+        AdUtils.instance.showOpenAd();
         _openLaunchPage=false;
       }
     });

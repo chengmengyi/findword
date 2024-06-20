@@ -58,7 +58,7 @@ class IncentC extends BaseC{
     RoutersUtils.off();
     UserInfoUtils.instance.updateUserCoinNum(num??addNum);
     if(incentFrom==IncentFrom.oldUserGuide){
-      GuideUtils.instance.updateOldUserGuide(OldUserGuideStep.answerTips);
+      // GuideUtils.instance.updateOldUserGuide(OldUserGuideStep.answerTips);
     }
     if(clickClaim){
       TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_double_pop_continue,params: _getAppPointParams());

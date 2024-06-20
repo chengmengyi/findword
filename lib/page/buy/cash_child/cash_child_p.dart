@@ -3,6 +3,7 @@ import 'package:findword/page/buy/cash_child/cash_child_c.dart';
 import 'package:findword/utils/sign_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value2_utils.dart';
 import 'package:findword/utils/value_utils.dart';
 import 'package:findword/widget/btn_widget.dart';
 import 'package:findword/widget/images_widget.dart';
@@ -102,7 +103,7 @@ class CashChildP extends BaseW<CashChildC>{
               GetBuilder<CashChildC>(
                 id: "money",
                 builder: (_)=>StrokedTextWidget(
-                    text: "\$${ValueUtils.instance.getCoinToMoney(UserInfoUtils.instance.userCoinNum)}",
+                    text: "\$${UserInfoUtils.instance.userMoney}",
                     fontSize: 48.sp,
                     textColor: Colors.white,
                     strokeColor: "#002E63".toColor(),
@@ -251,70 +252,76 @@ class CashChildP extends BaseW<CashChildC>{
     ),
   );
 
-  _taskWidget()=>Container(
-    width: double.infinity,
-    height: 104.h,
-    margin: EdgeInsets.only(top: 4.h),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10.w),
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: ["#B0F6FF".toColor(),"#D6FAFF".toColor()],
-      ),
-      border: Border.all(
-        width: 1.w,
-        color: "#00B1C8".toColor()
-      )
-    ),
-    child: ListView.builder(
-      itemCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context,index)=>Container(
+  _taskWidget()=>GetBuilder<CashChildC>(
+    id: "task_list",
+    builder: (_)=>Offstage(
+      offstage: UserInfoUtils.instance.userMoney<Value2Utils.instance.getCashList().first,
+      child: Container(
         width: double.infinity,
-        height: 52.h,
-        alignment: Alignment.centerLeft,
-        child: Row(
-          children: [
-            SizedBox(width: 16.w,),
-            TextWidget(
-              text: index==0?"Check in for 7 days：":"Collect 10 cash bubbles：",
-              size: 15.sp,
-              color: "#5F2800".toColor(),
-              fontWeight: FontWeight.w700,
+        height: 104.h,
+        margin: EdgeInsets.only(top: 4.h),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.w),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: ["#B0F6FF".toColor(),"#D6FAFF".toColor()],
             ),
-            TextWidget(
-              text: index==0?"${SignUtils.instance.signDays}/7":"${UserInfoUtils.instance.bubbleNum}/10",
-              size: 15.sp,
-              color: "#FF2E00".toColor(),
-              fontWeight: FontWeight.w700,
-            ),
-            const Spacer(),
-            InkWell(
-              onTap: (){
-                con.clickTaskItem(index);
-              },
-              child: Stack(
-                alignment: Alignment.center,
-                key: index==0?con.checkInGlobalKey:null,
-                children: [
-                  ImagesWidget(
-                    name: index==0&&SignUtils.instance.todaySign?"btn3":"btn2",
-                    width: 96.w,
-                    height: 32.h,
+            border: Border.all(
+                width: 1.w,
+                color: "#00B1C8".toColor()
+            )
+        ),
+        child: ListView.builder(
+          itemCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context,index)=>Container(
+            width: double.infinity,
+            height: 52.h,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                SizedBox(width: 16.w,),
+                TextWidget(
+                  text: index==0?"Check in for 7 days：":"Collect 10 cash bubbles：",
+                  size: 15.sp,
+                  color: "#5F2800".toColor(),
+                  fontWeight: FontWeight.w700,
+                ),
+                TextWidget(
+                  text: index==0?"${SignUtils.instance.signDays}/7":"${UserInfoUtils.instance.bubbleNum}/10",
+                  size: 15.sp,
+                  color: "#FF2E00".toColor(),
+                  fontWeight: FontWeight.w700,
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: (){
+                    con.clickTaskItem(index);
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    key: index==0?con.checkInGlobalKey:null,
+                    children: [
+                      ImagesWidget(
+                        name: index==0&&SignUtils.instance.todaySign?"btn3":"btn2",
+                        width: 96.w,
+                        height: 32.h,
+                      ),
+                      TextWidget(
+                        text: index==0?"Check-in":"Go",
+                        size: 14.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      )
+                    ],
                   ),
-                  TextWidget(
-                    text: index==0?"Check-in":"Go",
-                    size: 14.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  )
-                ],
-              ),
+                ),
+                SizedBox(width: 16.w,),
+              ],
             ),
-            SizedBox(width: 16.w,),
-          ],
+          ),
         ),
       ),
     ),

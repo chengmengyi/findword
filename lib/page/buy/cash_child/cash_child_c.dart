@@ -9,20 +9,20 @@ import 'package:findword/utils/event/event_bean.dart';
 import 'package:findword/utils/event/event_name.dart';
 import 'package:findword/utils/guide/checkin_guide_overlay.dart';
 import 'package:findword/utils/guide/guide_utils.dart';
-import 'package:findword/utils/guide/new_user_guide_step.dart';
 import 'package:findword/utils/max_ad/ad_pos_id.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/sign_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value2_utils.dart';
 import 'package:findword/utils/value_utils.dart';
 import 'package:flutter/material.dart';
 
 class CashChildC extends BaseC{
   var payTypeIndex=0,cashNumIndex=0,marqueeStr="";
   GlobalKey checkInGlobalKey=GlobalKey();
-  List<int> cashNumList=ValueUtils.instance.getCashList();
+  List<int> cashNumList=Value2Utils.instance.getCashList();
   List<String> payTypeList=["pay_type1","pay_type2","pay_type3","pay_type4","pay_type5","pay_type6"];
 
   @override
@@ -51,12 +51,14 @@ class CashChildC extends BaseC{
 
   clickTaskItem(int index){
     if(index==0){
+      TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.cash_get_task_1);
       if(SignUtils.instance.todaySign){
         "Signed in today, Please come back tomorrow".showToast();
         return;
       }
       RoutersUtils.showDialog(child: SignD());
     }else{
+      TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.cash_get_task_2);
       EventBean(eventName: EventName.updateHomeIndex,intValue: 0,boolValue: true).sendEvent();
     }
   }
@@ -119,7 +121,7 @@ class CashChildC extends BaseC{
         update(["page"]);
         break;
       case EventName.updateUserCoin:
-        update(["page"]);
+        update(["page","task_list"]);
         break;
       default:
 
@@ -137,7 +139,7 @@ class CashChildC extends BaseC{
               offset: offset,
               click: (){
                 GuideUtils.instance.hideOverlay();
-                GuideUtils.instance.updateNewUserGuide(NewUserGuideStep.signDialog);
+                // GuideUtils.instance.updateNewUserGuide(NewUserGuideStep.signDialog);
               })
       );
     }

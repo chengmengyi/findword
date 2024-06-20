@@ -1,5 +1,6 @@
 import 'package:findword/base/base_p.dart';
 import 'package:findword/page/buy/buy_home/buy_home_c.dart';
+import 'package:findword/utils/utils.dart';
 import 'package:findword/widget/buy_coin/buy_coin_w.dart';
 import 'package:findword/widget/get_money_lottie_widget.dart';
 import 'package:findword/widget/heart/heart_widget.dart';
@@ -102,8 +103,8 @@ class BuyHomeP extends BaseP<BuyHomeC>{
       children: [
         SizedBox(width: 8.w,),
         BuyCoinW(),
-        SizedBox(width: 8.w,),
-        HeartWidget(),
+        // SizedBox(width: 8.w,),
+        // HeartWidget(),
         const Spacer(),
         InkWell(
           onTap: (){

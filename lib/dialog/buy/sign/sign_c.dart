@@ -1,24 +1,21 @@
 import 'package:findword/base/base_c.dart';
+import 'package:findword/dialog/buy/congratulation/congratulation_dialog.dart';
 import 'package:findword/dialog/buy/sign/sign_from.dart';
-import 'package:findword/utils/max_ad/ad_pos_id.dart';
-import 'package:findword/utils/max_ad/ad_utils.dart';
-import 'package:findword/utils/guide/guide_utils.dart';
 import 'package:findword/utils/guide/new_user_guide_step.dart';
 import 'package:findword/utils/guide/old_user_guide_step.dart';
+import 'package:findword/utils/max_ad/ad_pos_id.dart';
+import 'package:findword/utils/guide/guide_utils.dart';
 import 'package:findword/utils/guide/sign_guide_overlay.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/sign_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
+import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value2_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_max_ad/ad/ad_bean/max_ad_bean.dart';
-import 'package:flutter_max_ad/ad/ad_type.dart';
-import 'package:flutter_max_ad/ad/listener/ad_show_listener.dart';
-import 'package:flutter_max_ad/export.dart';
-import 'package:flutter_max_ad/flutter_max_ad.dart';
 
 class SignC extends BaseC{
   SignFrom signFrom=SignFrom.other;
-  List<int> signList=[2000,2000,3000,5000,7000,8000,10000];
+  List<int> signList=[];
   List<GlobalKey> globalList=[];
 
   @override
@@ -27,10 +24,10 @@ class SignC extends BaseC{
     SignUtils.instance.resetSign();
     var map = RoutersUtils.getParams();
     signFrom=map["signFrom"]??SignFrom.other;
+    signList.addAll(Value2Utils.instance.getSignInList());
     for (var value in signList) {
       globalList.add(GlobalKey());
     }
-    FlutterMaxAd.instance.loadAdByType(AdType.reward);
     TbaUtils.instance.uploadAppPoint(
       appPoint: AppPoint.fw_signin_pop,
       params: {
@@ -64,58 +61,36 @@ class SignC extends BaseC{
             index: SignUtils.instance.signDays,
             addNum: signList[SignUtils.instance.signDays],
             click: (){
-              TbaUtils.instance.uploadAppPoint(
-                  appPoint: AppPoint.fw_signin_pop_c,
-                  params: {
-                    "sign_from":signFrom==SignFrom.newUser?"new":"old"
-                  }
-              );
-              GuideUtils.instance.hideOverlay();
-              AdUtils.instance.showAd(
-                  adType: AdType.reward,
-                  adPosId: signFrom==SignFrom.newUser?
-                  AdPosId.fw_new_checkin_rv:
-                  signFrom==SignFrom.oldUser?
-                  AdPosId.fw_old_checkin_rv:
-                  AdPosId.fw_common_checkinx2_rv,
-                  adFormat: AdFomat.REWARD,
-                  cancelShow: (){
-                    _updateGuideStep();
-                  },
-                  adShowListener: AdShowListener(
-                      showAdFail: (MaxAd? ad, MaxError? error) {
-                        _updateGuideStep();
-                      },
-                      onAdHidden: (MaxAd? ad) {
-                        SignUtils.instance.sign(signList[SignUtils.instance.signDays]);
-                        _updateGuideStep();
-                      },
-                  )
-              );
+              clickSign(SignUtils.instance.signDays);
             })
     );
   }
 
-  _updateGuideStep(){
-    RoutersUtils.off();
-    if(signFrom==SignFrom.newUser){
-      GuideUtils.instance.updateNewUserGuide(NewUserGuideStep.wordBubbleGuide);
-    }else{
-      GuideUtils.instance.updateOldUserGuide(OldUserGuideStep.incentDialog);
-    }
-  }
-
   clickSign(int index){
-    TbaUtils.instance.uploadAppPoint(
-        appPoint: AppPoint.fw_signin_pop_c,
-        params: {
-          "sign_from":"other"
-        }
-    );
-    if(SignUtils.instance.todaySign||index>SignUtils.instance.signDays){
+    TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_signin_pop_c);
+    if(SignUtils.instance.todaySign){
+      "Today signed".showToast();
       return;
     }
-    SignUtils.instance.sign(signList[index]);
-    RoutersUtils.off();
+    if(index>SignUtils.instance.signDays){
+      return;
+    }
+    if(signFrom==SignFrom.newUser){
+      GuideUtils.instance.updateNewUserGuideStep(NewUserGuideStep.showBubbleGuide);
+    }
+    if(signFrom==SignFrom.oldUser){
+      GuideUtils.instance.updateOldUserGuideStep(OldUserGuideStep.completed);
+    }
+    var add = signList[index];
+    RoutersUtils.showDialog(
+      child: CongratulationDialog(
+        dismiss: (){
+          SignUtils.instance.sign(add);
+          RoutersUtils.off();
+          "Sign Success".showToast();
+        },
+      ),
+      arguments: {"addNum":add.toDouble()}
+    );
   }
 }

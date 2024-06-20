@@ -1,5 +1,6 @@
 import 'package:findword/utils/app_state_utils.dart';
 import 'package:findword/utils/data.dart';
+import 'package:findword/utils/guide/guide_utils.dart';
 import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/check_user_utils.dart';
 import 'package:findword/utils/notification_utils.dart';
@@ -7,6 +8,7 @@ import 'package:findword/utils/routers/routers_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value2_utils.dart';
 import 'package:findword/utils/value_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,7 +49,8 @@ _initApp()async{
   AppStateUtils.instance.setListener();
   await GetStorage.init();
   MobileAds.instance.initialize();
-  ValueUtils.instance.initValue();
+  Value2Utils.instance.initValue();
+  GuideUtils.instance.initInfo();
   CheckUserUtils.instance.check();
   CheckUserUtils.instance.setNetworkListener();
   AdUtils.instance.initAd();

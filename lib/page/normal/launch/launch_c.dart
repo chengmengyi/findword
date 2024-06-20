@@ -52,9 +52,7 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
       _stopTimer();
       if(userType){
         if(FlutterMaxAd.instance.checkHasCache(AdType.inter)){
-          AdUtils.instance.showOpenAd(
-              noCache: (){}
-          );
+          AdUtils.instance.showOpenAd();
         }else{
           _timeEnd(userType);
         }
@@ -66,9 +64,7 @@ class LaunchC extends BaseC with WidgetsBindingObserver{
     if(userType&&FlutterMaxAd.instance.checkHasCache(AdType.inter)){
       _stopTimer();
       _timeEnd(userType);
-      AdUtils.instance.showOpenAd(
-          noCache: (){}
-      );
+      AdUtils.instance.showOpenAd();
     }
   }
 

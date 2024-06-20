@@ -1,12 +1,17 @@
 import 'package:findword/base/base_w.dart';
 import 'package:findword/bean/words_char_bean.dart';
+import 'package:findword/dialog/buy/sign/sign_from.dart';
+import 'package:findword/enums/click_words_tips_from.dart';
 import 'package:findword/page/buy/word_child/word_child_c.dart';
+import 'package:findword/utils/guide/guide_utils.dart';
+import 'package:findword/utils/routers/routers_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:findword/widget/bubble_widget.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/stroked_text_widget.dart';
 import 'package:findword/widget/text_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -32,8 +37,14 @@ class WordChildP extends BaseW<WordChildC>{
         ),
         _topWidget(),
         _contentWidget(),
-        _fingerTipsWidget(),
-        BubbleWidget(),
+        GetBuilder<WordChildC>(
+          id: "bubble",
+          builder: (_)=>Offstage(
+            offstage: !GuideUtils.instance.showBubble,
+            child: BubbleWidget(),
+          ),
+        ),
+        _wheelGuideWidget(),
       ],
     ),
   );
@@ -43,7 +54,7 @@ class WordChildP extends BaseW<WordChildC>{
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: 60.h,),
+        SizedBox(height: 100.h,),
         Stack(
           alignment: Alignment.center,
           children: [
@@ -65,15 +76,15 @@ class WordChildP extends BaseW<WordChildC>{
           margin: EdgeInsets.only(left: 16.w,right: 16.w),
           child: GetBuilder<WordChildC>(
             id: "words_list",
-            builder: (_)=>StaggeredGridView.countBuilder(
+            builder: (_)=> StaggeredGridView.countBuilder(
               padding: const EdgeInsets.all(0),
-              itemCount: con.wordsList.length,
+              itemCount: con.currentWordsBean?.word?.length??0,
               shrinkWrap: true,
-              crossAxisCount: 3,
+              crossAxisCount: 5,
               mainAxisSpacing: 8.w,
               crossAxisSpacing: 8.w,
               physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context,index)=>_wordItemWidget(con.wordsList[index]),
+              itemBuilder: (context,index)=>_wordsItemWidget(index),
               staggeredTileBuilder: (int index) => const StaggeredTile.fit(1),
             ),
           ),
@@ -81,6 +92,38 @@ class WordChildP extends BaseW<WordChildC>{
       ],
     ),
   );
+  
+  _wordsItemWidget(int index){
+    var wordsBean = con.getHintWordsByIndex(index);
+    return Container(
+      margin: EdgeInsets.only(left: 4.w,right: 4.w),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          AspectRatio(
+            aspectRatio: 1,
+            child: ImagesWidget(
+              // name: "new_words1",
+              name: null==wordsBean?
+              "new_words3":
+              wordsBean.chooseStatus==ChooseStatus.error ?
+              "new_words2":
+              "new_words1",
+              width: double.infinity,
+              fit: BoxFit.fill,
+            ),
+          ),
+          StrokedTextWidget(
+            text: wordsBean?.words??"",
+            fontSize: 48.sp,
+            textColor: Colors.white,
+            strokeColor: "#009004".toColor(),
+            strokeWidth: 2.w,
+          )
+        ],
+      ),
+    );
+  }
   
   _wordItemWidget(WordsBean wordsBean)=>Stack(
     alignment: Alignment.center,
@@ -131,12 +174,11 @@ class WordChildP extends BaseW<WordChildC>{
       id: "choose_list",
       builder: (_)=>Container(
         height: double.infinity,
-        margin: EdgeInsets.only(
-            // left: con.getChooseCharMargin(),
-            // right: con.getChooseCharMargin(),
-            top: 20.h,
-            bottom: 20.h
-        ),
+        width: double.infinity,
+        // margin: EdgeInsets.only(
+        //     top: 20.h,
+        //     bottom: 20.h
+        // ),
         // child: StaggeredGridView.countBuilder(
         //   padding: const EdgeInsets.all(0),
         //   itemCount: con.wordsChooseList.length,
@@ -148,51 +190,77 @@ class WordChildP extends BaseW<WordChildC>{
         //   itemBuilder: (context,index)=>_chooseWordsItemWidget(con.wordsChooseList[index]),
         //   staggeredTileBuilder: (int index) => const StaggeredTile.fit(1),
         // ),
-        child: GridView.builder(
-          scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.all(0),
-            itemCount: con.wordsChooseList.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: con.rowsNum,
-              mainAxisSpacing: 20.h,
-              crossAxisSpacing: 20.w,
-              childAspectRatio: 1
+        // child: GridView.builder(
+        //   scrollDirection: Axis.horizontal,
+        //     padding: const EdgeInsets.all(0),
+        //     itemCount: con.wordsChooseList.length,
+        //     shrinkWrap: true,
+        //     physics: const NeverScrollableScrollPhysics(),
+        //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //       crossAxisCount: con.rowsNum,
+        //       mainAxisSpacing: 20.h,
+        //       crossAxisSpacing: 20.w,
+        //       childAspectRatio: 1
+        //     ),
+        //     itemBuilder: (context,index)=>_chooseWordsItemWidget(con.wordsChooseList[index])
+        // ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 100.h,
+              left: 60.w,
+              child: _chooseWordsItemWidget2(0),
             ),
-            itemBuilder: (context,index)=>_chooseWordsItemWidget(con.wordsChooseList[index])
+            Positioned(
+              left: 180.w,
+              bottom: 33.h,
+              child: _chooseWordsItemWidget2(1),
+            ),
+            Positioned(
+              top: 33.h,
+              right: 60.w,
+              child: _chooseWordsItemWidget2(2),
+            ),
+            _fingerTipsWidget(),
+          ],
         ),
       ),
     ),
   );
 
-  _chooseWordsItemWidget(WordsCharBean bean)=> InkWell(
-    onTap: (){
-      con.clickWordsChar(bean);
-    },
-    child: AspectRatio(
-      aspectRatio: 1,
-      key: bean.globalKey,
+  _chooseWordsItemWidget2(int index){
+    var wordsBean = con.getChooseWordsBeanByIndex(index);
+    return InkWell(
+      onTap: (){
+        con.clickWordsChar(wordsBean);
+      },
       child: Stack(
         alignment: Alignment.center,
+        key: wordsBean?.globalKey,
         children: [
           ImagesWidget(
-              name: bean.chooseStatus==ChooseStatus.normal?
-              "btn_normal":
-              bean.chooseStatus==ChooseStatus.error?
-              "btn_error":
-              "btn_right"
+            name: wordsBean?.chooseStatus==ChooseStatus.normal?
+            "btn_normal":
+            wordsBean?.chooseStatus==ChooseStatus.right?
+            "btn_right":
+            "btn_error",
+            width: 72.w,
+            height: 72.w,
           ),
-          TextWidget(
-            text: bean.chars,
-            size: 34.sp,
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
+          StrokedTextWidget(
+            text: wordsBean?.words??"",
+            fontSize: 48.sp,
+            textColor: Colors.white,
+            strokeColor: wordsBean?.chooseStatus==ChooseStatus.normal?
+            "#B75800".toColor():
+            wordsBean?.chooseStatus==ChooseStatus.error?"#DE3500".toColor():
+            "#009004".toColor(),
+            strokeWidth: 2.w,
           ),
         ],
       ),
-    ),
-  );
+    );
+  }
 
   _centerWidget()=>Container(
     width: double.infinity,
@@ -208,7 +276,19 @@ class WordChildP extends BaseW<WordChildC>{
           Row(
             children: [
               SizedBox(width: 16.w,),
-              ImagesWidget(name: "word4",width: 48.w,height: 48.h,),
+              SizedBox(
+                key: con.wheelGlobalKey,
+                child: InkWell(
+                  onTap: (){
+                    con.clickWheel();
+                  },
+                  child: ImagesWidget(
+                    name: "icon_wheel",
+                    width: 48.w,
+                    height: 48.h,
+                  ),
+                ),
+              ),
               SizedBox(width: 8.w,),
               Expanded(
                 child: Column(
@@ -218,7 +298,7 @@ class WordChildP extends BaseW<WordChildC>{
                     Container(
                       margin: EdgeInsets.only(right: 16.w),
                       child: StrokedTextWidget(
-                          text: "Pass 3 level， get a chance to spin the wheel",
+                          text: "Pass 5 Level，Get A Chance To Spin The Wheel",
                           fontSize: 13.sp,
                           textColor: Colors.white,
                           strokeColor: "#C32300".toColor(),
@@ -250,7 +330,7 @@ class WordChildP extends BaseW<WordChildC>{
                             ),
                           ),
                           StrokedTextWidget(
-                              text: "${(UserInfoUtils.instance.userLevel-1)%3}/3",
+                              text: "${UserInfoUtils.instance.wheelChanceProgress}/5",
                               fontSize: 13.sp,
                               textColor: Colors.white,
                               strokeColor: "#2F0058".toColor(),
@@ -300,27 +380,21 @@ class WordChildP extends BaseW<WordChildC>{
       //   ),
       // ),
       const Spacer(),
-      Stack(
-        alignment: Alignment.center,
-        children: [
-          ImagesWidget(name: "home8",width: 120.w,height: 44.h,),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ImagesWidget(name: "home9",width: 32.w,height: 32.h,),
-              SizedBox(width: 4.w,),
-              GetBuilder<WordChildC>(
-                id: "timer",
-                builder: (_)=>TextWidget(
-                  text: "${con.answerTimeCount}",
-                  size: 17.sp,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          )
-        ],
+      GetBuilder<WordChildC>(
+        id: "box",
+        builder: (_)=>Visibility(
+          visible: GuideUtils.instance.showBox,
+          key: con.boxGlobalKey,
+          maintainAnimation: true,
+          maintainState: true,
+          maintainSize: true,
+          child: InkWell(
+            onTap: (){
+              RoutersUtils.showSignDialog(SignFrom.other);
+            },
+            child: ImagesWidget(name: "icon_box",width: 64.w,height: 64.w,),
+          ),
+        ),
       ),
       SizedBox(width: 16.w,),
     ],
@@ -329,10 +403,12 @@ class WordChildP extends BaseW<WordChildC>{
   _fingerTipsWidget()=>GetBuilder<WordChildC>(
     id: "finger",
     builder: (_)=>Positioned(
-      top: con.fingerTop,
-      left: con.fingerLeft,
+      top: con.getFingerTop(),
+      left: con.getFingerLeft(),
+      right: con.getFingerRight(),
+      bottom: con.getFingerBottom(),
       child: Offstage(
-        offstage: !con.showFinger,
+        offstage: con.tipsIndex==-1,
         child: InkWell(
           onTap: (){
             con.clickTipsFinger();
@@ -341,6 +417,26 @@ class WordChildP extends BaseW<WordChildC>{
             "asset/figer.zip",
             width: 120.w,
             height: 120.h,
+          ),
+        ),
+      ),
+    ),
+  );
+
+  _wheelGuideWidget()=>GetBuilder<WordChildC>(
+    id: "wheel_guide",
+    builder: (_)=>Container(
+      margin: EdgeInsets.only(top: (con.wheelGuideOffset?.dy??30.w)-30.w,left: 20.w),
+      child: Offstage(
+        offstage: null==con.wheelGuideOffset,
+        child: InkWell(
+          onTap: (){
+            con.clickWheel();
+          },
+          child: Lottie.asset(
+            "asset/figer.zip",
+            width: 200.w,
+            height: 200.h,
           ),
         ),
       ),

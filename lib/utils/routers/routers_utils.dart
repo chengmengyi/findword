@@ -1,3 +1,7 @@
+import 'package:findword/dialog/buy/get_money/get_money_d.dart';
+import 'package:findword/dialog/buy/sign/sign_d.dart';
+import 'package:findword/dialog/buy/sign/sign_from.dart';
+import 'package:findword/enums/get_money_from.dart';
 import 'package:findword/page/buy/buy_home/buy_home_p.dart';
 import 'package:findword/page/normal/home/home_p.dart';
 import 'package:findword/page/normal/launch/launch_p.dart';
@@ -81,5 +85,13 @@ class RoutersUtils{
       barrierColor: barrierColor,
       barrierDismissible: barrierDismissible ?? false,
     );
+  }
+
+  static showSignDialog(SignFrom signFrom){
+    showDialog(child: SignD(),arguments: {"signFrom":signFrom});
+  }
+
+  static showGetMoneyDialog({required GetMoneyFrom getMoneyFrom,required Function() dismissDialog}){
+    showDialog(child: GetMoneyD(dismissDialog: dismissDialog),arguments: {"getMoneyFrom":getMoneyFrom});
   }
 }

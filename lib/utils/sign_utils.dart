@@ -34,7 +34,7 @@ class SignUtils{
     signDays++;
     todaySign=true;
     StorageUtils.instance.writeValue(StorageKey.sign, "${getTodayTimer()}_$signDays");
-    UserInfoUtils.instance.updateUserCoinNum(addNum);
+    UserInfoUtils.instance.updateUserMoney(addNum.toDouble());
     EventBean(eventName: EventName.signSuccess).sendEvent();
     NotificationUtils.instance.cancelNotification(NotificationsId.sign);
   }

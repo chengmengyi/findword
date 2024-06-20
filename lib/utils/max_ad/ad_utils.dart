@@ -27,7 +27,7 @@ class AdUtils{
 
   AdUtils._internal();
 
-  var upLevelCloseNum=0,wheelCloseNum=0,answerRightCloseNum=0;
+  var upLevelCloseNum=0,wheelCloseNum=0,answerRightCloseNum=0,getMoneyCloseNum=0;
 
   initAd(){
     var json = _getLocalAdJson();
@@ -112,10 +112,9 @@ class AdUtils{
     adShowListener.showAdFail?.call(null,null);
   }
 
-  showOpenAd({required Function() noCache}){
+  showOpenAd(){
     var hasCache = FlutterMaxAd.instance.checkHasCache(AdType.inter);
     if(!hasCache){
-      noCache.call();
       return;
     }
     TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
@@ -153,6 +152,30 @@ class AdUtils{
     answerRightCloseNum++;
     if(answerRightCloseNum%3==0){
       _showCancelNumIntAd();
+    }
+  }
+
+  updateGetMoneyCloseNum(){
+    getMoneyCloseNum++;
+    if(getMoneyCloseNum%3==0){
+      TbaUtils.instance.uploadAdPoint(adPoint: AdPoint.ad_chance);
+      FlutterMaxAd.instance.showAd(
+          adType: AdType.inter,
+          adShowListener: AdShowListener(
+            showAdSuccess: (ad, MaxAdInfoBean? maxAdInfoBean){
+              TbaUtils.instance.uploadAdEvent(
+                  ad: ad,
+                  info: maxAdInfoBean,
+                  adPosId: AdPosId.fw_all_int,
+                  adFormat: AdFomat.INT
+              );
+
+            },
+            onAdHidden: (MaxAd? ad) {
+
+            },
+          )
+      );
     }
   }
 

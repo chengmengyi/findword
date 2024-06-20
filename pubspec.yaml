@@ -42,11 +42,12 @@ dependencies:
   lottie: 2.6.0
   google_mobile_ads: 4.0.0
   flutter_check_adjust_cloak: 0.2.0
-  flutter_max_ad: 0.2.4
+  flutter_max_ad: 0.2.5
   in_app_review: 2.0.9
   connectivity_plus: 6.0.3
   flutter_app_lifecycle: 0.0.1
   marquee: 2.2.3
+  decimal: 3.0.2
   flutter_local_notifications:
     path: plugins/flutter_local_notifications-17.1.2
 

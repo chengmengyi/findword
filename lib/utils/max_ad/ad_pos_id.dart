@@ -1,9 +1,11 @@
 enum AdPosId{
-  fw_open,fw_new_rv,fw_new_checkin_rv,fw_new_bubble_rv,fw_old_checkin_rv,
+  fw_new_rv,fw_new_checkin_rv,fw_new_bubble_rv,fw_old_checkin_rv,
   fw_old_checkinx2_rv, fw_wordright_rv,fw_wordlevelup_rv,fw_wordbox_rv,
   fw_addchance_rv, fw_addtips_rv,fw_wheel_int,fw_wheel_rv,
   fw_wheeladdchance_rv, fw_all_int,fw_common_checkinx2_rv,
-  fw_old_bubble_rv,unknownId
+  fw_old_bubble_rv,unknownId,
+
+  fw_open,fw_word_int,fw_float_rv,fw_word_rv
 }
 
 enum AdFomat{
@@ -65,5 +67,14 @@ enum AppPoint{
   fw_paypel_inform_c,
   fw_launch_page,
   word_float_pop_guide,
-  unknown
+  guide_level_1,
+  guide_level_1_c,
+  guide_level_2,
+  guide_level_2_c,
+  guide_level_3,
+  guide_level_3_c,
+  fw_word_page_wheel,
+  cash_get_task_1,
+  cash_get_task_2,
+  unknown,
 }

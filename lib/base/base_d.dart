@@ -9,6 +9,7 @@ abstract class BaseD<T extends BaseC> extends StatelessWidget{
   Widget build(BuildContext context){
     con=Get.put(initC());
     con.context=context;
+    initView();
     return WillPopScope(
         child: Material(
           type: MaterialType.transparency,
@@ -29,4 +30,6 @@ abstract class BaseD<T extends BaseC> extends StatelessWidget{
   T initC();
 
   bool custom()=>false;
+
+  initView(){}
 }

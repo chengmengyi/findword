@@ -1,7 +1,9 @@
 import 'package:findword/base/base_c.dart';
+import 'package:findword/dialog/buy/get_money/get_money_d.dart';
 import 'package:findword/dialog/buy/incent/incent_d.dart';
 import 'package:findword/dialog/buy/incent/incent_from.dart';
 import 'package:findword/dialog/buy/no_wheel/no_wheel_d.dart';
+import 'package:findword/enums/get_money_from.dart';
 import 'package:findword/utils/max_ad/ad_pos_id.dart';
 import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/event/event_bean.dart';
@@ -76,7 +78,7 @@ class WheelC extends BaseC{
         adShowListener: AdShowListener(
             showAdFail: (MaxAd? ad, MaxError? error) {  },
             onAdHidden: (MaxAd? ad) {
-              showIncentDialog(incentFrom: IncentFrom.wheel, closeDialog: (){});
+              RoutersUtils.showGetMoneyDialog(getMoneyFrom: GetMoneyFrom.wheel, dismissDialog: (){});
             },
         )
     );

@@ -28,10 +28,6 @@ class BuyHomeC extends BaseC{
     buyHomeShowing=true;
     TbaUtils.instance.uploadAppPoint(appPoint: AppPoint.fw_word_page);
     NotificationUtils.instance.registerNotifications();
-
-    Future.delayed(const Duration(milliseconds: 1000),(){
-      GuideUtils.instance.newUserGuide();
-    });
   }
 
   clickTab(index){

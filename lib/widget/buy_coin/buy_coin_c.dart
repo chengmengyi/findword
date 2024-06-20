@@ -1,8 +1,10 @@
+import 'package:decimal/decimal.dart';
 import 'package:findword/base/base_c.dart';
 import 'package:findword/utils/event/event_bean.dart';
 import 'package:findword/utils/event/event_name.dart';
 import 'package:findword/utils/max_ad/ad_pos_id.dart';
 import 'package:findword/utils/tba_utils.dart';
+import 'package:findword/utils/user_info_utils.dart';
 
 class BuyCoinC extends BaseC{
   bool showCash=true;
@@ -28,5 +30,11 @@ class BuyCoinC extends BaseC{
         default:
           break;
     }
+  }
+
+  double getCashProgress(){
+    var a = Decimal.parse(UserInfoUtils.instance.userMoney.toString());
+    var b = Decimal.parse("500");
+    return (b-a).toDouble();
   }
 }

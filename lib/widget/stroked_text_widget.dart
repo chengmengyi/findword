@@ -7,6 +7,8 @@ class StrokedTextWidget extends StatelessWidget{
   Color strokeColor;
   double strokeWidth;
   FontWeight? fontWeight;
+  TextDecoration? decoration;
+  Color? decorationColor;
 
   StrokedTextWidget({
     required this.text,
@@ -14,7 +16,9 @@ class StrokedTextWidget extends StatelessWidget{
     required this.textColor,
     required this.strokeColor,
     required this.strokeWidth,
-    this.fontWeight
+    this.fontWeight,
+    this.decoration,
+    this.decorationColor,
   });
 
 
@@ -27,6 +31,8 @@ class StrokedTextWidget extends StatelessWidget{
         style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
+            decoration: decoration,
+            decorationColor: decorationColor,
             foreground: Paint()
               ..style = PaintingStyle.stroke
               ..strokeWidth = strokeWidth

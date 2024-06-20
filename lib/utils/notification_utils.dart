@@ -123,8 +123,8 @@ class NotificationUtils{
         ticker: 'ticker'
     );
     var details = NotificationDetails(android: androidNotificationDetails);
-    flutterLocalNotificationsPlugin.periodicallyShow(id, title, content, kDebugMode?RepeatInterval.everyMinute:repeatInterval, details);
-    // flutterLocalNotificationsPlugin.periodicallyShow(id, title, content, repeatInterval, details);
+    // flutterLocalNotificationsPlugin.periodicallyShow(id, title, content, kDebugMode?RepeatInterval.everyMinute:repeatInterval, details);
+    flutterLocalNotificationsPlugin.periodicallyShow(id, title, content, repeatInterval, details);
   }
 
   _clickNotification(NotificationResponse response){

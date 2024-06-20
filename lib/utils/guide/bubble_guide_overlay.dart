@@ -1,3 +1,4 @@
+import 'package:findword/utils/guide/guide_utils.dart';
 import 'package:findword/utils/utils.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/text_widget.dart';
@@ -25,21 +26,9 @@ class BubbleGuideOverlay extends StatelessWidget{
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(10.w),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.w)
-                    ),
-                    child: TextWidget(
-                      text: "Collect 10 cash bubbles,\nGet \$10",
-                      size: 15.sp,
-                      color: "#002E63".toColor(),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
                   InkWell(
                     onTap: (){
+                      GuideUtils.instance.hideOverlay();
                       click.call();
                     },
                     child: ImagesWidget(
@@ -56,6 +45,7 @@ class BubbleGuideOverlay extends StatelessWidget{
               right: 0,
               child: InkWell(
                 onTap: (){
+                  GuideUtils.instance.hideOverlay();
                   click.call();
                 },
                 child: Lottie.asset(

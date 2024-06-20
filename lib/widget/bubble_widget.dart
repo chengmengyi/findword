@@ -9,6 +9,7 @@ import 'package:findword/utils/max_ad/ad_utils.dart';
 import 'package:findword/utils/tba_utils.dart';
 import 'package:findword/utils/user_info_utils.dart';
 import 'package:findword/utils/utils.dart';
+import 'package:findword/utils/value2_utils.dart';
 import 'package:findword/utils/value_utils.dart';
 import 'package:findword/widget/images_widget.dart';
 import 'package:findword/widget/text_widget.dart';
@@ -31,7 +32,7 @@ class _BubbleWidgetState extends State<BubbleWidget> with SingleTickerProviderSt
   Timer? _timer;
   bool right=true,down=true,showGuide=false,showBubble=true;
   late StreamSubscription<EventBean>? _bus;
-  var addNum=ValueUtils.instance.getFloatAddNum();
+  var addNum=Value2Utils.instance.getFloatAddNum();
 
   @override
   void initState() {
@@ -81,12 +82,13 @@ class _BubbleWidgetState extends State<BubbleWidget> with SingleTickerProviderSt
                         width: 100.w,
                         height: 100.h,
                       ),
-                      TextWidget(text: "\$${ValueUtils.instance.getCoinToMoney(addNum)}", size: 20.sp, color: Colors.white,fontWeight: FontWeight.w900,)
+                      TextWidget(text: "\$$addNum", size: 20.sp, color: Colors.white,fontWeight: FontWeight.w900,)
                     ],
                   ),
                 ),
                 Offstage(
                   offstage: !showGuide,
+                  // offstage: false,
                   child: Lottie.asset(
                     "asset/figer.zip",
                     width: 120.w,
@@ -151,20 +153,21 @@ class _BubbleWidgetState extends State<BubbleWidget> with SingleTickerProviderSt
     });
     AdUtils.instance.showAd(
         adType: AdType.reward,
-        adPosId: AdPosId.fw_old_bubble_rv,
+        adPosId: AdPosId.fw_float_rv,
         adFormat: AdFomat.REWARD,
         cancelShow: (){
           _showBubble();
         },
         adShowListener: AdShowListener(
           onAdHidden: (MaxAd? ad) {
-            UserInfoUtils.instance.updateBubbleNum(1);
+            // UserInfoUtils.instance.updateBubbleNum(1);
             _showBubble();
-            showIncentDialog(
-                incentFrom: IncentFrom.bubble,
-                addNum: addNum,
-                closeDialog: (){}
-            );
+            // showIncentDialog(
+            //     incentFrom: IncentFrom.bubble,
+            //     addNum: addNum,
+            //     closeDialog: (){}
+            // );
+            UserInfoUtils.instance.updateUserMoney(addNum);
           },
           showAdFail: (ad,error){
             _showBubble();
@@ -177,7 +180,7 @@ class _BubbleWidgetState extends State<BubbleWidget> with SingleTickerProviderSt
     Future.delayed(Duration(seconds: FirebaseDataUtils.instance.bubbleTime),(){
       setState(() {
         showBubble=true;
-        addNum=ValueUtils.instance.getFloatAddNum();
+        addNum=Value2Utils.instance.getFloatAddNum();
       });
     });
   }

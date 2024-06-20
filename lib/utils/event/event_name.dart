@@ -16,4 +16,7 @@ enum EventName{
   updateWheelChance,
   showOrHideCash,
   playMoneyLottie,
+  showNewUserFingerGuide,
+  showBox,
+  showBubbleGuide,
 }

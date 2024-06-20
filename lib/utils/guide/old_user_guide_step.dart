@@ -1,3 +1,3 @@
 enum OldUserGuideStep{
-  signDialog,incentDialog,answerTips,completeOldUserGuide
+  showBoxGuide,completed,
 }

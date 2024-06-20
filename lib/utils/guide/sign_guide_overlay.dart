@@ -40,18 +40,9 @@ class SignGuideOverlay extends StatelessWidget{
             Positioned(
               top: offset.dy,
               left: offset.dx,
-              // child: InkWell(
-              //   onTap: (){
-              //     click.call();
-              //   },
-              //   child: Lottie.asset(
-              //     "asset/figer.zip",
-              //     width: 200.w,
-              //     height: 200.h,
-              //   ),
-              // ),
               child: InkWell(
                 onTap: (){
+                  GuideUtils.instance.hideOverlay();
                   click.call();
                 },
                 child: Stack(
