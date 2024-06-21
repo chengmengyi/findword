@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +30,6 @@ void main() async{
 
 _initApp()async{
   await GetStorage.init();
-  MobileAds.instance.initialize();
   CloakUtils.instance.requestCloak();
 }
 

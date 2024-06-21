@@ -5,8 +5,6 @@ import 'package:findword/bean/words_char_bean.dart';
 import 'package:findword/dialog/normal/heart/heart_d.dart';
 import 'package:findword/dialog/normal/time_out/time_out_d.dart';
 import 'package:findword/dialog/normal/words_right/words_right_d.dart';
-import 'package:findword/utils/admob/admob_listener.dart';
-import 'package:findword/utils/admob/admob_utils.dart';
 import 'package:findword/utils/event/event_bean.dart';
 import 'package:findword/utils/event/event_name.dart';
 import 'package:findword/utils/routers/routers_utils.dart';
@@ -17,7 +15,7 @@ import 'package:findword/utils/words/words_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class PlayC extends BaseC implements AdmobListener{
+class PlayC extends BaseC{
   WordsEnum wordsEnum=WordsEnum.easy;
   int rowsNum=3,answerTimeCount=20;
   List<WordsBean> wordsList=[];
@@ -33,8 +31,6 @@ class PlayC extends BaseC implements AdmobListener{
     WordsUtils.instance.initIndex();
     wordsEnum=RoutersUtils.getParams()["wordsEnum"];
     rowsNum=wordsEnum==WordsEnum.easy?3:wordsEnum==WordsEnum.middle?4:5;
-    AdmobUtils.instance.loadInterAd();
-    AdmobUtils.instance.setAdmobListener(this);
   }
 
   @override
@@ -78,7 +74,6 @@ class PlayC extends BaseC implements AdmobListener{
             if(_checkWordsAllComplete()){
               WordsUtils.instance.updateWordsIndex(wordsEnum);
               _updateWordsList();
-              AdmobUtils.instance.showInterAd();
             }
           },
         ));

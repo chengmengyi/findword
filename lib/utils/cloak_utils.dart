@@ -27,7 +27,7 @@ class CloakUtils{
   Dio? _dio;
 
   requestCloak()async{
-    if(_requestNum>20){
+    if(_requestNum>20||Platform.isAndroid){
       return;
     }
     var url="$cloakUrl?"
